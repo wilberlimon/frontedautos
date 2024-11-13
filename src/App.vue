@@ -1,39 +1,17 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import ListarAutos from './module/autos/ListarAutos.vue'
 </script>
 
 <template>
+
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
   </header>
+
   <div>
-    <!-- <RouterView /> -->
-    <table border="1">
-      <th>Nro</th>
-      <th>Marca</th>
-      <th>Modelo</th>
-      <th>Año</th>
-      <th>Color</th>
-      <th>Placa</th>
-      <tr>
-        <td>1</td>
-        <td>Toyota</td>
-        <td>Corolla</td>
-        <td>2022</td>
-        <td>Blanco</td>
-        <td>ABC-123</td>
-      </tr>
-      <tr>
-        <td>Nro</td>
-        <td>Toyota</td>
-        <td>Corolla</td>
-        <td>2022</td>
-        <td>Blanco</td>
-        <td>ABC-123</td>
-      </tr>
-    </table>
+    <ListarAutos />
   </div>
+
 </template>
 
 <style scoped>
