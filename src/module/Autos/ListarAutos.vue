@@ -29,7 +29,7 @@ const mostrarFormulario = () => {
   <AddAutos v-if="verFormulario" /> <!-- Ahora debería mostrarse correctamente -->
 
   <hr class="linea-divisor" />
-  <div v-if="listaAutos.length > 0">
+  <div v-if="listaAutos.length > 0" class="block">
     <table border="1">
       <tr>
         <td>Nro</td>
@@ -66,7 +66,11 @@ const mostrarFormulario = () => {
 
 .linea-divisor {
   width: 100%;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.block {
+  width: 100%;
 }
 </style>

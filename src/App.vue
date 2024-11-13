@@ -3,77 +3,49 @@ import ListarAutos from './module/autos/ListarAutos.vue'
 </script>
 
 <template>
-
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-  </header>
-
-  <div>
-    <ListarAutos />
+  <div class="contenedor">
+    <header class="header">header</header>
+    <div class="contenido">
+      <div class="panel-menu">asdafd</div>
+      <div class="panel-data">
+        <ListarAutos />
+      </div>
+    </div>
+    <div class="panel-derecho"></div>
+    <footer>footeer</footer>
   </div>
-
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+.contenedor {
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.header {
+  background-color: red;
+  height: 50px;
+  width: 100%;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.panel-menu {
+  background-color: violet;
+  height: 100vh;
+  width: 20%;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.contenido {
+  background-color: yellow;
+  height: 100vh;
+  display: flex;
 }
 
-nav a:first-of-type {
-  border: 0;
+.panel-data {
+  height: 100vh;
+  width: 80%;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+footer {
+  background-color: turquoise;
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
 }
 </style>
