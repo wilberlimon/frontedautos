@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ListarAutos from './module/autos/ListarAutos.vue'
+import ListarAutos from './module/Autos/ListarAutos.vue'
 </script>
 
 <template>
@@ -42,6 +42,8 @@ import ListarAutos from './module/autos/ListarAutos.vue'
 .panel-data {
   height: 100vh;
   width: 80%;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 footer {

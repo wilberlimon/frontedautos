@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { ref } from 'vue'
-import AddAutos from './components/AddAutos.vue'
+import AddAutos from './components/AddAutos.vue';
 
-const listaAutos = ref([])
+interface Auto {
+  _id: string;
+  Marca: string;
+  Modelo: string;
+  Año: string;
+  Color: string;
+  Estado: string;
+  Placa: string;
+}
+const listaAutos = ref<Auto[]>([])
 // tiene tiempo de retardo
 setTimeout(() => {
   axios.get('http://127.0.0.1:3005/autos').then((response) => {
