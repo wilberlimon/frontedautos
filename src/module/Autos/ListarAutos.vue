@@ -13,12 +13,16 @@ interface Auto {
   Placa: string;
 }
 const listaAutos = ref<Auto[]>([])
-// tiene tiempo de retardo
-setTimeout(() => {
-  axios.get('http://127.0.0.1:3005/autos').then((response) => {
-    listaAutos.value = response.data
-  })
-}, 4000)
+
+const ListarAutos = () => {
+  // tiene tiempo de retardo
+  setTimeout(() => {
+    axios.get('http://127.0.0.1:3005/autos').then((response) => {
+      listaAutos.value = response.data
+    })
+  }, 100)
+}
+ListarAutos()
 
 const verFormulario = ref(false)
 
@@ -35,7 +39,8 @@ const mostrarFormulario = () => {
 
     </button>
   </div>
-  <AddAutos v-if="verFormulario" /> <!-- Ahora debería mostrarse correctamente -->
+
+  <AddAutos v-if="verFormulario" @event-nuevo-auto="ListarAutos" /> <!-- Ahora debería mostrarse correctamente -->
 
   <hr class="linea-divisor" />
   <div v-if="listaAutos.length > 0" class="block">

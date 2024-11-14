@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, defineEmits } from 'vue'
 import axios from 'axios'
 
-
+const emit = defineEmits(['event-nuevo-auto'])
 const datosACrear = reactive({
   Marca: '',
   Modelo: '',
@@ -13,18 +13,20 @@ const datosACrear = reactive({
 })
 
 const enviarDatos = () => {
-  //2 segundos
+  //500 milisegundos
   setTimeout(() => {
     axios
       .post('http://127.0.0.1:3005/autos', datosACrear)
       .then((response) => {
-        console.log('Datos de respuesta', response.data);
+        console.log('Datos de respuesta', response.data)
+        emit('event-nuevo-auto')
+
       })
       .catch((err) => {
         console.log('ocurrio un error');
         console.log(err);
       })
-  }, 2000)
+  }, 500)
 }
 
 </script>
