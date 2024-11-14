@@ -4,50 +4,100 @@ import ListarAutos from './module/Autos/ListarAutos.vue'
 
 <template>
   <div class="contenedor">
-    <header class="header">header</header>
     <div class="contenido">
-      <div class="panel-menu">asdafd</div>
+      <div class="panel-menu">
+        <div class="logo">
+          <img src="@/assets/logo.png" alt="Logo" class="logo-imagen" />
+        </div>
+        <button class="menu-button">AUTOS</button>
+        <button class="menu-button">CLIENTES</button>
+        <button class="menu-button">VENTAS</button>
+        <button class="menu-button">REPORTES</button>
+      </div>
       <div class="panel-data">
         <ListarAutos />
       </div>
     </div>
-    <div class="panel-derecho"></div>
-    <footer>footeer</footer>
+    <footer>
+      <p>© ITEC2024 - Todos los derechos reservados</p>
+    </footer>
   </div>
 </template>
 
 <style scoped>
+/* Estilos del logo */
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.logo-imagen {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+}
+
 .contenedor {
-  width: 100%;
-}
-
-.header {
-  background-color: red;
-  height: 50px;
-  width: 100%;
-}
-
-.panel-menu {
-  background-color: violet;
-  height: 100vh;
-  width: 20%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .contenido {
-  background-color: yellow;
-  height: 100vh;
   display: flex;
+  flex: 1;
+}
+
+.panel-menu {
+  background-color: #065813;
+  width: 20%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .panel-data {
-  height: 100vh;
+  margin-left: 20%;
   width: 80%;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  padding: 2rem;
+  height: calc(100vh - 50px);
+  /* Calcula el espacio debajo del footer */
+  overflow-y: auto;
+}
+
+.menu-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #065813;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background-color: white;
+  color: #065813;
 }
 
 footer {
-  background-color: turquoise;
-
+  height: 50px;
+  width: 100%;
+  color: black;
+  font-weight: bolder;
+  background-color: white;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin-left: 20%;
 }
 </style>

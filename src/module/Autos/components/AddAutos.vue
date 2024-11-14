@@ -2,14 +2,17 @@
 import { reactive, defineEmits } from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['event-nuevo-auto'])
+const emit = defineEmits(['event-nuevo-auto', 'cerrar-formulario'])
 const datosACrear = reactive({
   Marca: '',
   Modelo: '',
-  Año: '',
+  Anio: '',
   Color: '',
-  Estado: '',
-  Placa: '',
+  Tipo: '',
+  Chasis: '',
+  Vin: '',
+  OtrasCaracteristicas: '',
+  FechaIngreso: '',
 })
 
 const enviarDatos = () => {
@@ -20,7 +23,7 @@ const enviarDatos = () => {
       .then((response) => {
         console.log('Datos de respuesta', response.data)
         emit('event-nuevo-auto')
-
+        emit('cerrar-formulario')
       })
       .catch((err) => {
         console.log('ocurrio un error');
@@ -44,8 +47,8 @@ const enviarDatos = () => {
   </div>
 
   <div>
-    <label for="año">Año: </label>
-    <input id="año" type="text" v-model="datosACrear.Año" />
+    <label for="anio">Año: </label>
+    <input id="anio" type="text" v-model="datosACrear.Anio" />
   </div>
 
   <div>
@@ -54,16 +57,34 @@ const enviarDatos = () => {
   </div>
 
   <div>
-    <label for="modelo">Estado: </label>
-    <select v-model="datosACrear.Estado">
-      <option value="N">Nuevo</option>
-      <option value="U">Usado</option>
+    <label for="tipo">Tipo: </label>
+    <select v-model="datosACrear.Tipo">
+      <option value="Berlina">Berlina</option>
+      <option value="Familiar">Familiar</option>
+      <option value="Descapotable">Descapotable</option>
+      <option value="Multiuso">Multiuso</option>
+      <option value="Camioneta">Camioneta</option>
     </select>
   </div>
 
   <div>
-    <label for="placa">Placa: </label>
-    <input id="placa" type="text" v-model="datosACrear.Placa">
+    <label for="chasis">Chasis: </label>
+    <input id="chasis" type="text" v-model="datosACrear.Chasis" />
+  </div>
+
+  <div>
+    <label for="vin">Vin: </label>
+    <input id="vin" type="text" v-model="datosACrear.Vin" />
+  </div>
+
+  <div>
+    <label for="fechaingreso">Fecha de Ingreso:</label>
+    <input id="fechaingreso" type="date" v-model="datosACrear.FechaIngreso" />
+  </div>
+
+  <div>
+    <label for="otrascaracteristicas">Otras Características: </label>
+    <textarea id="otrascaracteristicas" v-model="datosACrear.OtrasCaracteristicas"></textarea>
   </div>
 
   <button class="btn-registrar" @click="enviarDatos">Registrar</button>
@@ -71,9 +92,55 @@ const enviarDatos = () => {
 </template>
 
 <style>
+/* Contenedor de formulario */
+div {
+  margin-bottom: 1rem;
+}
+
+/* Estilos para los labels */
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para las cajas de texto, select y date */
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+  /* Permite redimensionar verticalmente el textarea */
+}
+
+/* Estilos para el botón de registro */
 .btn-registrar {
   width: 100%;
-  background-color: green;
+  padding: 10px;
+  background-color: #065813;
   color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-registrar:hover {
+  background-color: #065813;
+  /* Verde más oscuro al pasar el cursor */
+}
+
+.linea-divisor {
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-top: 3px solid #065813;
 }
 </style>
