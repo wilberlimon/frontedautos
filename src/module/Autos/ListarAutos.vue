@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import AddAutos from './components/AddAutos.vue';
+import AutosEditar from './components/EditAutos.vue';
 
 interface Auto {
   _id: string;
@@ -52,6 +53,11 @@ const verdetalle = (id: string) => {
     console.log(err)
   })
 }
+
+const autoSeleccionado = ref(null);
+const actualizarAto = (itemAto) => {
+  autoSeleccionado.value = itemAto;
+}
 </script>
 
 <template>
@@ -63,6 +69,8 @@ const verdetalle = (id: string) => {
   </div>
 
   <AddAutos v-if="verFormulario" @cerrar-formulario="() => (verFormulario = false)" @event-nuevo-auto="ListarAutos" />
+
+  <AutosEditar v-if="autoSeleccionado" !=null :seleccionado="autoSeleccionado" />
   <!-- Ahora debería mostrarse correctamente -->
 
   <!-- <hr class="linea-divisor" /> -->
@@ -77,17 +85,17 @@ const verdetalle = (id: string) => {
         <td>Tipo</td>
         <td>Acciones</td>
       </tr>
-      <tr v-for="(auto, index) in listaAutos" :key="auto._id">
+      <tr v-for="(item, index) in listaAutos" :key="item._id">
         <td>{{ index + 1 }}</td>
-        <td>{{ auto.Marca }}</td>
-        <td>{{ auto.Modelo }}</td>
-        <td>{{ auto.Anio }}</td>
-        <td>{{ auto.Color }}</td>
-        <td>{{ auto.Tipo }}</td>
+        <td>{{ item.Marca }}</td>
+        <td>{{ item.Modelo }}</td>
+        <td>{{ item.Anio }}</td>
+        <td>{{ item.Color }}</td>
+        <td>{{ item.Tipo }}</td>
         <td>
-          <button class="editar">Editar</button>
-          <button class="eliminar" @click="eliminarAto(auto._id)">Eliminar</button>
-          <button class="detalle" @click="verdetalle(auto._id)">Detalle</button>
+          <button class="editar" @click="actualizarAto(item)">Editar</button>
+          <button class="eliminar" @click="eliminarAto(item._id)">Eliminar</button>
+          <button class="detalle" @click="verdetalle(item._id)">Detalle</button>
           <button>Reporte</button>
         </td>
 
