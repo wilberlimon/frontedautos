@@ -43,7 +43,6 @@ const enviarDatos = () => {
 
 <template>
   <h1>Formulario de Edición</h1>
-  {{ seleccionado }}
   <div>
     <label for="marca">Marca: </label>
     <input id="marca" type="text" v-model="datosACrear.Marca" />
@@ -95,7 +94,7 @@ const enviarDatos = () => {
     <textarea id="otrascaracteristicas" v-model="datosACrear.OtrasCaracteristicas"></textarea>
   </div>
 
-  <button class="btn-registrar" @click="enviarDatos">Registrar</button>
+  <button class="btn-registrar" @click="enviarDatos">Actualizar</button>
   <hr class="linea-divisor">
 </template>
 
