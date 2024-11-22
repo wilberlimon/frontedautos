@@ -19,80 +19,81 @@ const datosACrear = reactive({
   Chasis: prop.seleccionado.Chasis,
   Vin: prop.seleccionado.Vin,
   OtrasCaracteristicas: prop.seleccionado.OtrasCaracteristicas,
-  FechaIngreso: prop.seleccionado.FechaIngreso
+  FechaIngreso: new Date(prop.seleccionado.FechaIngreso).toISOString().slice(0, 10),
 })
 
-// const enviarDatos = () => {
-//   //500 milisegundos
-//   setTimeout(() => {
-//     axios
-//       .get('http://127.0.0.1:3005/autos', datosACrear)
-//       .then((response) => {
-//         console.log('Datos de respuesta', response.data)
-//         emit('event-edit-auto')
-//         emit('cerrar-formulario')
-//       })
-//       .catch((err) => {
-//         console.log('ocurrio un error');
-//         console.log(err);
-//       })
-//   }
-// }
+const enviarDatos = () => {
+  //500 milisegundos
+
+  setTimeout(() => {
+    axios
+      .patch('http://127.0.0.1:3005/autos/' + prop.seleccionado._id, datosACrear)
+      .then((response) => {
+        console.log('Datos de respuesta', response.data)
+        emit('event-edit-auto')
+        emit('cerrar-formulario')
+      })
+      .catch((err) => {
+        console.log('ocurrio un error');
+        console.log(err);
+      })
+  }, 500)
+}
 </script>
 
 <template>
   <h1>Formulario de Edición</h1>
   {{ seleccionado }}
-  // <div>
-    // <label for="marca">Marca: </label>
-    // <input id="marca" type="text" v-model="datosACrear.Marca" />
-    // </div>
+  <div>
+    <label for="marca">Marca: </label>
+    <input id="marca" type="text" v-model="datosACrear.Marca" />
+  </div>
 
-  // <div>
-    // <label for="modelo">Modelo: </label>
-    // <input id="modelo" type="text" v-model="datosACrear.Modelo" />
-    // </div>
+  <div>
+    <label for="modelo">Modelo: </label>
+    <input id="modelo" type="text" v-model="datosACrear.Modelo" />
+  </div>
 
-  // <div>
-    // <label for="anio">Año: </label>
-    // <input id="anio" type="text" v-model="datosACrear.Anio" />
-    // </div>
+  <div>
+    <label for="anio">Año: </label>
+    <input id="anio" type="text" v-model="datosACrear.Anio" />
+  </div>
 
-  // <div>
-    // <label for="color">Color: </label>
-    // <input id="color" type="text" v-model="datosACrear.Color" />
-    // </div>
+  <div>
+    <label for="color">Color: </label>
+    <input id="color" type="text" v-model="datosACrear.Color" />
+  </div>
 
-  // <div>
-    // <label for="tipo">Tipo: </label>
-    // <select v-model="datosACrear.Tipo">
-      // <option value="Berlina">Berlina</option>
-      // <option value="Familiar">Familiar</option>
-      // <option value="Descapotable">Descapotable</option>
-      // <option value="Multiuso">Multiuso</option>
-      // <option value="Camioneta">Camioneta</option>
-      // </select>
-    // </div>
+  <div>
+    <label for="tipo">Tipo: </label>
+    <select v-model="datosACrear.Tipo">
+      <option value="Berlina">Berlina</option>
+      <option value="Familiar">Familiar</option>
+      <option value="Descapotable">Descapotable</option>
+      <option value="Multiuso">Multiuso</option>
+      <option value="Camioneta">Camioneta</option>
+    </select>
+  </div>
 
-  // <div>
-    // <label for="chasis">Chasis: </label>
-    // <input id="chasis" type="text" v-model="datosACrear.Chasis" />
-    // </div>
+  <div>
+    <label for="chasis">Chasis: </label>
+    <input id="chasis" type="text" v-model="datosACrear.Chasis" />
+  </div>
 
-  // <div>
-    // <label for="vin">Vin: </label>
-    // <input id="vin" type="text" v-model="datosACrear.Vin" />
-    // </div>
+  <div>
+    <label for="vin">Vin: </label>
+    <input id="vin" type="text" v-model="datosACrear.Vin" />
+  </div>
 
-  // <div>
-    // <label for="fechaingreso">Fecha de Ingreso:</label>
-    // <input id="fechaingreso" type="date" v-model="datosACrear.FechaIngreso" />
-    // </div>
+  <div>
+    <label for="fechaingreso">Fecha de Ingreso:</label>
+    <input id="fechaingreso" type="date" v-model="datosACrear.FechaIngreso" />
+  </div>
 
-  // <div>
-    // <label for="otrascaracteristicas">Otras Características: </label>
-    // <textarea id="otrascaracteristicas" v-model="datosACrear.OtrasCaracteristicas"></textarea>
-    // </div>
+  <div>
+    <label for="otrascaracteristicas">Otras Características: </label>
+    <textarea id="otrascaracteristicas" v-model="datosACrear.OtrasCaracteristicas"></textarea>
+  </div>
 
   <button class="btn-registrar" @click="enviarDatos">Registrar</button>
   <hr class="linea-divisor">

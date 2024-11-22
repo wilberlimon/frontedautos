@@ -55,6 +55,8 @@ const verdetalle = (id: string) => {
 }
 
 const autoSeleccionado = ref(null);
+
+
 const actualizarAto = (itemAto) => {
   autoSeleccionado.value = itemAto;
 }
