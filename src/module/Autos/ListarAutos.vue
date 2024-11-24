@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import axios from 'axios'
-import { ref } from 'vue'
+import axios from 'axios';
+import { ref } from 'vue';
 import AddAutos from './components/AddAutos.vue';
 import AutosEditar from './components/EditAutos.vue';
 
@@ -16,50 +16,63 @@ interface Auto {
   OtrasCaracateristicas: string;
   FechaIngreso: Date;
 }
-const listaAutos = ref<Auto[]>([])
 
+const listaAutos = ref<Auto[]>([]);
+const busquedaTexto = ref('');
+const verFormulario = ref(false);
+const verDetalleDiv = ref(false);
+const autoDetalle = ref<Auto | null>(null);
+const autoSeleccionado = ref<Auto | null>(null);
 
+// Listar autos desde el servidor
 const ListarAutos = () => {
-  // tiene tiempo de retardo
   setTimeout(() => {
     axios.get('http://127.0.0.1:3005/autos').then((response) => {
-      listaAutos.value = response.data
-    })
-  }, 100)
-}
-ListarAutos()
+      listaAutos.value = response.data;
+    });
+  }, 100);
+};
+ListarAutos();
 
-const verFormulario = ref(false)
-
+// Mostrar u ocultar el formulario
 const mostrarFormulario = () => {
-  verFormulario.value = !verFormulario.value
-}
+  verFormulario.value = !verFormulario.value;
+};
 
+// Eliminar auto por ID
 const eliminarAto = (id: string) => {
-  axios.delete(`http://127.0.0.1:3005/autos/${id}`).then(() => {
-    ListarAutos()
-  }).catch((err) => {
-    console.log(err)
-  })
-}
+  axios
+    .delete(`http://127.0.0.1:3005/autos/${id}`)
+    .then(() => {
+      ListarAutos();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-const verDetalleDiv = ref(false);
-const autoDetalle = ref(null);
+// Ver detalles de un auto por ID
 const verdetalle = (id: string) => {
-  axios.get(`http://127.0.0.1:3005/autos/${id}`).then((response) => {
-    autoDetalle.value = response.data
-    verDetalleDiv.value = true
-  }).catch((err) => {
-    console.log(err)
-  })
-}
+  axios
+    .get(`http://127.0.0.1:3005/autos/${id}`)
+    .then((response) => {
+      autoDetalle.value = response.data;
+      verDetalleDiv.value = true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-const autoSeleccionado = ref(null);
-
-
-const actualizarAto = (itemAto) => {
+// Actualizar auto seleccionado
+const actualizarAto = (itemAto: Auto) => {
   autoSeleccionado.value = itemAto;
-}
+};
+
+// Método de búsqueda (puedes expandirlo)
+const methodBuscar = () => {
+  console.log(busquedaTexto.value);
+};
 </script>
 
 <template>
@@ -72,10 +85,14 @@ const actualizarAto = (itemAto) => {
 
   <AddAutos v-if="verFormulario" @cerrar-formulario="() => (verFormulario = false)" @event-nuevo-auto="ListarAutos" />
 
-  <AutosEditar v-if="autoSeleccionado" !=null :seleccionado="autoSeleccionado" />
-  <!-- Ahora debería mostrarse correctamente -->
+  <div v-if="autoSeleccionado">
+    <AutosEditar :seleccionado="autoSeleccionado" @cerrar-formulario="autoSeleccionado = null"
+      @event-edit-auto="ListarAutos" />
+  </div>
 
-  <!-- <hr class="linea-divisor" /> -->
+  <input type="text" v-model="busquedaTexto" placeholder="Buscar...">
+  <button @click="methodBuscar">Buscar</button>
+
   <div v-if="listaAutos.length > 0" class="block">
     <table border="1">
       <tr>
@@ -100,29 +117,32 @@ const actualizarAto = (itemAto) => {
           <button class="detalle" @click="verdetalle(item._id)">Detalle</button>
           <button>Reporte</button>
         </td>
-
       </tr>
     </table>
   </div>
-  <div v-else>cargando datos.....</div>
-  <!-- <hr /> -->
-  <div v-if="autoDetalle != null" class="block">
+  <div v-else>cargando datos...</div>
+
+  <div v-if="autoDetalle" class="block">
     <p>ID: {{ autoDetalle._id }}</p>
     <p>Marca: {{ autoDetalle.Marca }}</p>
     <p>Modelo: {{ autoDetalle.Modelo }}</p>
-    <p>Año: {{ autoDetalle.Anio }}</p>
+    <p>Año: {{ autoDetalle.Anio }}</p>
     <p>Color: {{ autoDetalle.Color }}</p>
     <p>Tipo: {{ autoDetalle.Tipo }}</p>
     <p>Chasis: {{ autoDetalle.Chasis }}</p>
     <p>Vin: {{ autoDetalle.Vin }}</p>
-    <p>Otras Caracteristicas: {{ autoDetalle.OtrasCaracteristicas }}</p>
+    <p>Otras Características: {{ autoDetalle.OtrasCaracateristicas }}</p>
     <p>Fecha Ingreso: {{ autoDetalle.FechaIngreso }}</p>
-
   </div>
 </template>
 
 <style>
-/* Estilos generales de la tabla */
+/* General Styles */
+body {
+  overflow-y: auto;
+  /* Permite solo un scroll principal */
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -135,34 +155,25 @@ th {
   padding: 8px;
 }
 
-/* Estilo para el encabezado de la tabla */
 table tr:first-child {
   background-color: #065813;
-  /* Fondo verde */
   color: white;
-  /* Texto blanco */
   text-align: center;
-  /* Texto centrado */
   font-weight: bold;
 }
 
-/* Columna de número con el mismo estilo de encabezado */
 td:first-child {
   background-color: #065813;
   color: white;
   text-align: center;
 }
 
-/* Ajuste de ancho para la columna de acciones */
 td:last-child {
   width: 1px;
-  /* Ajusta el ancho de la columna para que se ajuste al contenido */
   white-space: nowrap;
-  /* Impide que la columna se expanda */
   text-align: center;
 }
 
-/* Espaciado y estilo para los botones */
 button {
   padding: 8px 12px;
   margin-right: 5px;
@@ -191,21 +202,22 @@ button.detalle {
 
 button.toggle-form {
   background-color: #065813;
-  /* Fondo verde */
   color: white;
-  /* Texto blanco */
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
   margin-bottom: 10px;
-  /* Espacio debajo del botón */
 }
 
 button.toggle-form:hover {
   background-color: #065813;
-  /* Fondo verde más oscuro al pasar el ratón */
   opacity: 0.9;
+}
+
+.block {
+  overflow: hidden;
+  /* Evita scroll adicional */
 }
 </style>

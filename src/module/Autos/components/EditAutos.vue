@@ -28,8 +28,7 @@ const enviarDatos = () => {
   setTimeout(() => {
     axios
       .patch('http://127.0.0.1:3005/autos/' + prop.seleccionado._id, datosACrear)
-      .then((response) => {
-        console.log('Datos de respuesta', response.data)
+      .then(() => {
         emit('event-edit-auto')
         emit('cerrar-formulario')
       })
