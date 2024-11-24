@@ -23,7 +23,7 @@ body {
 }
 
 h1 {
-  font-size: 4rem;
+  font-size: 2rem;
   color: #065813;
 }
 
