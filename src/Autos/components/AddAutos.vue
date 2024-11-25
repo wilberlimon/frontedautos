@@ -2,7 +2,7 @@
 import { reactive, defineEmits } from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['event-nuevo-auto', 'cerrar-formulario'])
+const emit = defineEmits(['event-nuevo-auto', 'cerrar-formulario', 'event-nuevo-cliente'])
 const datosACrear = reactive({
   Marca: '',
   Modelo: '',

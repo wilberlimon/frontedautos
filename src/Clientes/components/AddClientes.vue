@@ -3,7 +3,7 @@
 import axios from 'axios'
 import { reactive } from 'vue';
 
-const emit = defineEmits(['event-nuevo-cliente', 'cerrar-formulario'])
+const emit = defineEmits(['event-nuevo-cliente', 'cerrar-formulario', 'event-nuevo-auto'])
 const crearCliente = reactive({
   nombre1: '',
   nombre2: '',
@@ -13,26 +13,25 @@ const crearCliente = reactive({
   sexo: '',
   cedulaIdentidad: '',
   direccion: '',
-  Telefono: '',
+  telefono: '',
   email: '',
 })
 
 const enviarDatos = () => {
-  //500 milisegundos
   setTimeout(() => {
     axios
-      .post('http://http://127.0.0.1:3005/clientes/registrar', crearCliente)
+      .post('http://127.0.0.1:3005/clientes/registrar', crearCliente)
       .then((response) => {
-        console.log('Datos de respuesta', response.data)
-        emit('event-nuevo-cliente')
-        emit('cerrar-formulario')
+        console.log('Datos de respuesta', response.data);
+        emit('event-nuevo-cliente', response.data); // Emitir el cliente creado
+        emit('cerrar-formulario');
       })
       .catch((err) => {
-        console.log('ocurrio un error');
-        console.log(err);
-      })
-  }, 500)
-}
+        console.error('Ocurrió un error', err);
+      });
+  }, 500);
+};
+
 
 </script>
 
@@ -83,7 +82,7 @@ const enviarDatos = () => {
 
   <div>
     <label for="telefono">Telefono:</label>
-    <input id="telefono" type="text" v-model="crearCliente.Telefono" />
+    <input id="telefono" type="text" v-model="crearCliente.telefono" />
   </div>
 
   <div>

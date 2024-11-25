@@ -1,46 +1,58 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RouterView } from 'vue-router';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+
 const router = useRouter();
-//import ListarAutos from './module/Autos/ListarAutos.vue';
+const route = useRoute();
 
 const mostrarMenu = ref(false); // Controla la visibilidad del menú lateral en pantallas pequeñas
-const goRoute = (route: string) => {
-  router.push(route);
-}
 
 // Alterna la visibilidad del menú lateral
 const toggleMenu = () => {
   mostrarMenu.value = !mostrarMenu.value;
+};
+
+// Navegar a una ruta específica
+const goRoute = (route: string) => {
+  router.push(route);
 };
 </script>
 
 <template>
   <div class="contenedor">
     <div class="contenido">
-      <!-- Botón para mostrar/ocultar el menú lateral (solo para pantallas pequeñas) -->
-      <button class="menu-toggle" @click="toggleMenu">
-        <span v-if="!mostrarMenu">☰</span>
-        <span v-else>✖</span>
-      </button>
+      <!-- Línea lateral con íconos para abrir/cerrar el menú -->
+      <div class="menu-linea">
+        <span v-if="!mostrarMenu" @click="toggleMenu">☰</span>
+        <span v-else @click="toggleMenu">✖</span>
+      </div>
 
       <!-- Menú lateral -->
       <div :class="['panel-menu', { 'menu-abierto': mostrarMenu }]">
         <div class="logo">
           <img src="@/assets/logo.png" alt="Logo" class="logo-imagen" />
         </div>
-        <button class="menu-button" @click="goRoute('/')">INICIO</button>
-        <button class="menu-button" @click="goRoute('/list-autos')">AUTOS</button>
-        <button class="menu-button" @click="goRoute('/list-clientes')">CLIENTES</button>
-        <button class="menu-button">VENTAS</button>
-        <button class="menu-button">REPORTES</button>
+        <button class="menu-button" :class="{ active: route.path === '/' }" @click="goRoute('/')">
+          INICIO
+        </button>
+        <button class="menu-button" :class="{ active: route.path === '/list-autos' }" @click="goRoute('/list-autos')">
+          AUTOS
+        </button>
+        <button class="menu-button" :class="{ active: route.path === '/list-clientes' }"
+          @click="goRoute('/list-clientes')">
+          CLIENTES
+        </button>
+        <button class="menu-button" :class="{ active: route.path === '/ventas' }" @click="goRoute('/ventas')">
+          VENTAS
+        </button>
+        <button class="menu-button" :class="{ active: route.path === '/reportes' }" @click="goRoute('/reportes')">
+          REPORTES
+        </button>
       </div>
 
       <!-- Contenido principal -->
       <div class="panel-data">
         <RouterView />
-        <!-- <ListarAutos /> -->
       </div>
     </div>
 
@@ -52,7 +64,7 @@ const toggleMenu = () => {
 </template>
 
 <style scoped>
-/* Contenedor principal */
+/* Estilos generales */
 .contenedor {
   display: flex;
   flex-direction: column;
@@ -65,7 +77,6 @@ const toggleMenu = () => {
   position: relative;
 }
 
-/* Menú lateral */
 .panel-menu {
   background-color: #065813;
   width: 20%;
@@ -110,12 +121,12 @@ const toggleMenu = () => {
   cursor: pointer;
 }
 
-.menu-button:hover {
+.menu-button:hover,
+.menu-button.active {
   background-color: white;
   color: #065813;
 }
 
-/* Contenido principal */
 .panel-data {
   margin-left: 20%;
   width: 80%;
@@ -125,25 +136,33 @@ const toggleMenu = () => {
   transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
-/* Botón para alternar el menú */
-.menu-toggle {
+/* Línea lateral con íconos para abrir/cerrar el menú */
+.menu-linea {
   display: none;
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 1100;
+  width: 30px;
+  height: 100%;
   background-color: #065813;
-  color: white;
-  font-size: 24px;
-  padding: 10px;
-  border: none;
-  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 
-.menu-toggle:hover {
-  background-color: white;
-  color: #065813;
+.menu-linea span {
+  color: white;
+  font-size: 24px;
+  margin: 10px 0;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+.menu-linea span:hover {
+  transform: scale(1.2);
 }
 
 /* Footer */
@@ -175,22 +194,18 @@ footer {
     width: 100%;
   }
 
-  .menu-toggle {
-    display: block;
-  }
-
-  .logo {
-    display: none;
+  .menu-linea {
+    display: flex;
   }
 }
 
-/* Estilos para pantallas grandes y tablets */
+/* Estilos para pantallas grandes */
 @media (min-width: 769px) {
   .panel-menu {
     transform: translateX(0);
   }
 
-  .menu-toggle {
+  .menu-linea {
     display: none;
   }
 }
