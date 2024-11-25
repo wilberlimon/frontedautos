@@ -32,7 +32,7 @@ const toggleMenu = () => {
         </div>
         <button class="menu-button" @click="goRoute('/')">INICIO</button>
         <button class="menu-button" @click="goRoute('/list-autos')">AUTOS</button>
-        <button class="menu-button">CLIENTES</button>
+        <button class="menu-button" @click="goRoute('/list-clientes')">CLIENTES</button>
         <button class="menu-button">VENTAS</button>
         <button class="menu-button">REPORTES</button>
       </div>

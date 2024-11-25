@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ListAutos from '../module/Autos/ListarAutos.vue'
+import ListarClientes from '@/Clientes/ListarClientes.vue'
 
 export const routes = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,11 +17,11 @@ export const routes = createRouter({
       component: ListAutos,
     },
 
-    // {
-    //   path: '/list-clientes',
-    //   name: 'clientes',
-    //   component: ListClientes,
-    // },
+    {
+      path: '/list-clientes',
+      name: 'clientes',
+      component: ListarClientes,
+    },
 
     // {
     //   path: '/list-vetas',
