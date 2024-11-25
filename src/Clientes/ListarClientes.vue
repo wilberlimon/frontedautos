@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { ref } from 'vue';
-import AddAutos from './components/AddAutos.vue';
-import AutosEditar from './components/EditAutos.vue';
+import AddAutos from './components/AddClientes.vue';
+import AutosEditar from './components/EditClientes.vue';
 
 interface Cliente {
   _id: string;
@@ -38,17 +38,17 @@ const mostrarFormulario = () => {
   verFormulario.value = !verFormulario.value;
 };
 
-// Eliminar auto por ID
-// const eliminarAto = (id: string) => {
-//   axios
-//     .delete(`http://127.0.0.1:3005/autos/${id}`)
-//     .then(() => {
-//       ListarAutos();
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+//Eliminar auto por ID
+const eliminarCliente = (id: string) => {
+  axios
+    .delete(`http://127.0.0.1:3005/clientes/${id}`)
+    .then(() => {
+      ListarClientes();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 // Ver detalles de un auto por ID
 // const verdetalle = (id: string) => {
@@ -120,7 +120,7 @@ const mostrarFormulario = () => {
       <tr>
         <td>Nro</td>
         <td>Primer Nombre</td>
-        <td>Segundo Nombre</td>
+        <td>Apellido Paterno</td>
         <td>Apellido Materno</td>
         <td>Cedula de Identidad</td>
         <td>Telefono</td>
@@ -135,7 +135,7 @@ const mostrarFormulario = () => {
         <td>{{ item.telefono }}</td>
         <td>
           <button class="editar">Editar</button>
-          <button class="eliminar">Eliminar</button>
+          <button class="eliminar" @click="eliminarCliente(item._id)">Eliminar</button>
         </td>
       </tr>
     </table>
