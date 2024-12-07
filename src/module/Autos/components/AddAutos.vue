@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { reactive, defineEmits } from 'vue'
 import axios from 'axios'
+import { reactive, ref } from 'vue'
+import ConfirmDialog from 'primevue/confirmdialog'
+import { useConfirm } from 'primevue/useconfirm'
+import { useToast } from 'primevue/usetoast'
+import Dialog from 'primevue/dialog'
 
-const emit = defineEmits(['event-nuevo-auto', 'cerrar-formulario', 'event-nuevo-cliente'])
-const datosACrear = reactive({
+const toast = useToast()
+const visible = ref(false)
+
+const abrirDialog = () => {
+  visible.value = true
+}
+
+const emit = defineEmits(['event-nuevo-auto', 'cerrar-formulario'])
+const crearAuto = reactive({
   Marca: '',
   Modelo: '',
   Anio: '',
@@ -15,132 +26,92 @@ const datosACrear = reactive({
   FechaIngreso: '',
 })
 
+const confirm = useConfirm()
 const enviarDatos = () => {
-  //500 milisegundos
-  setTimeout(() => {
-    axios
-      .post('http://127.0.0.1:3005/autos', datosACrear)
-      .then((response) => {
-        console.log('Datos de respuesta', response.data)
-        emit('event-nuevo-auto')
-        emit('cerrar-formulario')
-      })
-      .catch((err) => {
-        console.log('ocurrio un error');
-        console.log(err);
-      })
-  }, 500)
+  confirm.require({
+    message: '¿Está seguro de registrar el Auto?',
+    header: 'Confirmar',
+    icon: 'pi pi-info-circle',
+    accept: () => {
+      axios
+        .post('http://127.0.0.1:3005/autos', crearAuto)
+        .then((response) => {
+          toast.add({
+            severity: 'success',
+            summary: 'Info',
+            detail: 'Auto Creado Exitosamente',
+            life: 3000,
+          })
+          emit('event-nuevo-auto', response.data)
+          emit('cerrar-formulario')
+          visible.value = false // Cerrar el dialog después de crear
+        })
+        .catch((err) => {
+          console.error('Ocurrió un error', err)
+        })
+    },
+    reject: () => {
+      console.log('Registro cancelado')
+    },
+  })
 }
 
+defineExpose({ abrirDialog })
 </script>
 
 <template>
-  <h1>Formulario de Registro</h1>
-  <div>
-    <label for="marca">Marca: </label>
-    <input id="marca" type="text" v-model="datosACrear.Marca" />
-  </div>
+  <ConfirmDialog />
+  <Toast position="bottom-right" />
 
-  <div>
-    <label for="modelo">Modelo: </label>
-    <input id="modelo" type="text" v-model="datosACrear.Modelo" />
-  </div>
-
-  <div>
-    <label for="anio">Año: </label>
-    <input id="anio" type="text" v-model="datosACrear.Anio" />
-  </div>
-
-  <div>
-    <label for="color">Color: </label>
-    <input id="color" type="text" v-model="datosACrear.Color" />
-  </div>
-
-  <div>
-    <label for="tipo">Tipo: </label>
-    <select v-model="datosACrear.Tipo">
-      <option value="Berlina">Berlina</option>
-      <option value="Familiar">Familiar</option>
-      <option value="Descapotable">Descapotable</option>
-      <option value="Multiuso">Multiuso</option>
-      <option value="Camioneta">Camioneta</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="chasis">Chasis: </label>
-    <input id="chasis" type="text" v-model="datosACrear.Chasis" />
-  </div>
-
-  <div>
-    <label for="vin">Vin: </label>
-    <input id="vin" type="text" v-model="datosACrear.Vin" />
-  </div>
-
-  <div>
-    <label for="fechaingreso">Fecha de Ingreso:</label>
-    <input id="fechaingreso" type="date" v-model="datosACrear.FechaIngreso" />
-  </div>
-
-  <div>
-    <label for="otrascaracteristicas">Otras Características: </label>
-    <textarea id="otrascaracteristicas" v-model="datosACrear.OtrasCaracteristicas"></textarea>
-  </div>
-
-  <button class="btn-registrar" @click="enviarDatos">Registrar</button>
-  <hr class="linea-divisor">
+  <Dialog
+    v-model:visible="visible"
+    modal
+    header="Formulario de Registro"
+    :style="{ width: '30rem' }"
+  >
+    <div>
+      <label for="marca">Marca:</label>
+      <input id="marca" type="text" v-model="crearAuto.Marca" />
+    </div>
+    <div>
+      <label for="modelo">Modelo:</label>
+      <input id="modelo" type="text" v-model="crearAuto.Modelo" />
+    </div>
+    <div>
+      <label for="anio">Año:</label>
+      <input id="anio" type="text" v-model="crearAuto.Anio" />
+    </div>
+    <div>
+      <label for="color">Color:</label>
+      <input id="color" type="text" v-model="crearAuto.Color" />
+    </div>
+    <div>
+      <label for="tipo">Tipo:</label>
+      <select id="tipo" v-model="crearAuto.Tipo">
+        <option value="Familiar">Familiar</option>
+        <option value="Corporativo">Corporativo</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div>
+      <label for="chasis">Chasis:</label>
+      <input id="chasis" type="text" v-model="crearAuto.Chasis" />
+    </div>
+    <div>
+      <label for="vin">Vin:</label>
+      <input id="vin" type="text" v-model="crearAuto.Vin" />
+    </div>
+    <div>
+      <label for="otrascaracteristicas">Otras Características:</label>
+      <input id="otrascaracteristicas" type="text" v-model="crearAuto.OtrasCaracteristicas" />
+    </div>
+    <div>
+      <label for="fechaingreso">Fecha de Ingreso:</label>
+      <input id="fechaingreso" type="date" v-model="crearAuto.FechaIngreso" />
+    </div>
+    <div class="flex justify-end gap-2">
+      <button @click="visible = false">Cancelar</button>
+      <button @click="enviarDatos">Registrar</button>
+    </div>
+  </Dialog>
 </template>
-
-<style>
-/* Contenedor de formulario */
-div {
-  margin-bottom: 1rem;
-}
-
-/* Estilos para los labels */
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-/* Estilos para las cajas de texto, select y date */
-input[type="text"],
-input[type="date"],
-select,
-textarea {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  resize: vertical;
-  /* Permite redimensionar verticalmente el textarea */
-}
-
-/* Estilos para el botón de registro */
-.btn-registrar {
-  width: 100%;
-  padding: 10px;
-  background-color: #065813;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-registrar:hover {
-  background-color: #065813;
-  /* Verde más oscuro al pasar el cursor */
-}
-
-.linea-divisor {
-  width: 100%;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border-top: 3px solid #065813;
-}
-</style>

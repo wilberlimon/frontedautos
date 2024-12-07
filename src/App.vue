@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
-const mostrarMenu = ref(false); // Controla la visibilidad del menú lateral en pantallas pequeñas
+const mostrarMenu = ref(false) // Controla la visibilidad del menú lateral en pantallas pequeñas
 
 // Alterna la visibilidad del menú lateral
 const toggleMenu = () => {
-  mostrarMenu.value = !mostrarMenu.value;
-};
+  mostrarMenu.value = !mostrarMenu.value
+}
 
 // Navegar a una ruta específica
 const goRoute = (route: string) => {
-  router.push(route);
-};
+  router.push(route)
+}
 </script>
 
 <template>
@@ -35,17 +35,32 @@ const goRoute = (route: string) => {
         <button class="menu-button" :class="{ active: route.path === '/' }" @click="goRoute('/')">
           INICIO
         </button>
-        <button class="menu-button" :class="{ active: route.path === '/list-autos' }" @click="goRoute('/list-autos')">
+        <button
+          class="menu-button"
+          :class="{ active: route.path === '/list-autos' }"
+          @click="goRoute('/list-autos')"
+        >
           AUTOS
         </button>
-        <button class="menu-button" :class="{ active: route.path === '/list-clientes' }"
-          @click="goRoute('/list-clientes')">
+        <button
+          class="menu-button"
+          :class="{ active: route.path === '/list-clientes' }"
+          @click="goRoute('/list-clientes')"
+        >
           CLIENTES
         </button>
-        <button class="menu-button" :class="{ active: route.path === '/ventas' }" @click="goRoute('/ventas')">
+        <button
+          class="menu-button"
+          :class="{ active: route.path === '/list-ventas' }"
+          @click="goRoute('/list-ventas')"
+        >
           VENTAS
         </button>
-        <button class="menu-button" :class="{ active: route.path === '/reportes' }" @click="goRoute('/reportes')">
+        <button
+          class="menu-button"
+          :class="{ active: route.path === '/reportes' }"
+          @click="goRoute('/reportes')"
+        >
           REPORTES
         </button>
       </div>
@@ -133,7 +148,9 @@ const goRoute = (route: string) => {
   padding: 2rem;
   height: calc(100vh - 50px);
   overflow-y: auto;
-  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+  transition:
+    margin-left 0.3s ease-in-out,
+    width 0.3s ease-in-out;
 }
 
 /* Línea lateral con íconos para abrir/cerrar el menú */
