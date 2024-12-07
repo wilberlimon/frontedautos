@@ -30,7 +30,7 @@ const confirm = useConfirm()
 const enviarDatos = () => {
   confirm.require({
     message: '¿Está seguro de registrar el Auto?',
-    header: 'Confirmar',
+    header: 'Confirmar Registro',
     icon: 'pi pi-info-circle',
     accept: () => {
       axios
@@ -109,9 +109,29 @@ defineExpose({ abrirDialog })
       <label for="fechaingreso">Fecha de Ingreso:</label>
       <input id="fechaingreso" type="date" v-model="crearAuto.FechaIngreso" />
     </div>
-    <div class="flex justify-end gap-2">
-      <button @click="visible = false">Cancelar</button>
-      <button @click="enviarDatos">Registrar</button>
+    <div class="boton-registro">
+      <button icon="pi pi-check" @click="enviarDatos">Registrar</button>
     </div>
   </Dialog>
 </template>
+
+<style>
+.boton-registro {
+  margin-top: 1rem;
+}
+
+.boton-registro button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background-color: #044c0d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.boton-registro button:hover {
+  background-color: #044c0d;
+}
+</style>

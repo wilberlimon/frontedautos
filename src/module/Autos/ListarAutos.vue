@@ -26,12 +26,15 @@ interface Autos {
 
 const listaAutos = ref<Autos[]>([])
 const verFormulario = ref(false)
-const verFormularioEditar = ref(false) // Variable para controlar la visibilidad del formulario de edición
-const busquedamarca = ref('') // Campo de búsqueda por marca
+const verFormularioEditar = ref(false)
+const busquedamarca = ref('')
 const AutoSeleccionado = ref<Autos | null>(null)
-const dialogEliminar = ref(false) // Controla la visibilidad del diálogo de confirmación
-const autoAEliminar = ref<string | null>(null) // ID del auto a eliminar
-const toast = useToast() // Instancia del toast
+const dialogEliminar = ref(false)
+const autoAEliminar = ref<string | null>(null)
+const toast = useToast()
+
+const AddAutosRef = ref<InstanceType<typeof AddAutos> | null>(null)
+const EditAutosRef = ref<InstanceType<typeof EditAutos> | null>(null)
 
 // Listar todos los autos
 const ListarAutos = () => {
@@ -46,11 +49,8 @@ const ListarAutos = () => {
 }
 ListarAutos()
 
-const AddAutosRef = ref<InstanceType<typeof AddAutos> | null>(null) // Ref al componente AddAutos
-const EditAutosRef = ref<InstanceType<typeof EditAutos> | null>(null)
-
+// Mostrar formulario de agregar autos
 const mostrarFormulario = () => {
-  verFormulario.value = true
   if (AddAutosRef.value) {
     AddAutosRef.value.abrirDialog()
   } else {
@@ -58,11 +58,12 @@ const mostrarFormulario = () => {
   }
 }
 
+// Cerrar formulario
 const cerrarFormulario = () => {
   verFormulario.value = false
 }
 
-// Confirmar eliminar
+// Confirmar eliminación
 const confirmarEliminar = (id: string) => {
   autoAEliminar.value = id
   dialogEliminar.value = true
@@ -81,8 +82,8 @@ const eliminarAutos = () => {
           detail: 'Registro eliminado exitosamente',
           life: 3000,
         })
-        dialogEliminar.value = false // Cierra el diálogo
-        autoAEliminar.value = null // Resetea el ID
+        dialogEliminar.value = false
+        autoAEliminar.value = null
       })
       .catch((error) => {
         console.error('Error al eliminar autos:', error)
@@ -93,26 +94,26 @@ const eliminarAutos = () => {
 // Editar autos
 const actualizarAutos = (itemAutos: Autos) => {
   AutoSeleccionado.value = itemAutos
-  verFormularioEditar.value = true // Muestra el formulario de edición
+  verFormularioEditar.value = true
   nextTick(() => {
-    // Asegura que Vue actualice la vista después de cambiar el estado
+    // Asegura que Vue actualice la vista
   })
 }
 
 // Buscar autos por marca
 const methodBuscar = () => {
   if (!busquedamarca.value.trim()) {
-    ListarAutos() // Listar todos los autos si el campo está vacío
+    ListarAutos()
     return
   }
 
   axios
-    .get(`http://localhost:3005/autos/buscar`, {
+    .get('http://localhost:3005/autos/buscar', {
       params: { Marca: busquedamarca.value.trim() },
     })
     .then((response) => {
       if (response.data && response.data.length > 0) {
-        listaAutos.value = response.data // Mostrar resultados
+        listaAutos.value = response.data
       } else {
         alert('No se encontraron resultados para esta marca.')
         listaAutos.value = []
@@ -127,10 +128,8 @@ const methodBuscar = () => {
 
 <template>
   <div>
-    <!-- Toast -->
     <Toast />
 
-    <!-- Diálogo de confirmación para eliminar -->
     <Dialog
       v-model:visible="dialogEliminar"
       header="Confirmar eliminación"
@@ -150,19 +149,14 @@ const methodBuscar = () => {
       </div>
     </Dialog>
 
-    <!-- Botón de nuevo registro -->
-    <button class="toggle-form" @click="mostrarFormulario">
-      {{ verFormulario ? 'Ocultar formulario' : 'Nuevo Registro' }}
-    </button>
+    <button class="toggle-form" @click="mostrarFormulario">Nuevo Registro</button>
 
-    <!-- Formulario de agregar autos -->
     <AddAutos
       ref="AddAutosRef"
       @cerrar-formulario="cerrarFormulario"
       @event-nuevo-auto="ListarAutos"
     />
 
-    <!-- Formulario de editar autos -->
     <EditAutos
       ref="EditAutosRef"
       v-if="verFormularioEditar && AutoSeleccionado"
@@ -171,7 +165,6 @@ const methodBuscar = () => {
       @event-edit-auto="ListarAutos"
     />
 
-    <!-- Campos de búsqueda -->
     <div class="buscar-container">
       <input
         type="text"
@@ -182,34 +175,27 @@ const methodBuscar = () => {
       <button @click="methodBuscar" class="buscar">Buscar</button>
     </div>
 
-    <!-- Tabla de autos -->
     <div v-if="listaAutos.length > 0" class="block">
       <div class="card">
         <DataTable
           :value="listaAutos"
           showGridlines
           paginator
-          :rows="2"
-          :rowsPerPageOptions="[2, 4, 6, 8, 10]"
+          :rows="5"
+          :rowsPerPageOptions="[2, 3]"
           tableStyle="min-width: 50rem"
         >
-          <Column field="Marca" :sortable="true" header="Marca"></Column>
-          <Column field="Modelo" :sortable="true" header="Modelo"></Column>
-          <Column field="Anio" :sortable="true" header="Año"></Column>
-          <Column field="Color" :sortable="true" header="Color"></Column>
-          <Column field="Tipo" :sortable="true" header="Tipo"></Column>
+          <Column field="Marca" header="Marca" sortable></Column>
+          <Column field="Modelo" header="Modelo" sortable></Column>
+          <Column field="Anio" header="Año" sortable></Column>
+          <Column field="Color" header="Color" sortable></Column>
+          <Column field="Tipo" header="Tipo" sortable></Column>
           <Column header="Acciones">
             <template #body="slotProps">
-              <Button
-                icon="pi pi-pencil"
-                severity="secondary"
-                aria-label="Editar"
-                @click="actualizarAutos(slotProps.data)"
-              />
+              <Button icon="pi pi-pencil" @click="actualizarAutos(slotProps.data)" />
               <Button
                 icon="pi pi-times"
                 severity="danger"
-                aria-label="Eliminar"
                 @click="confirmarEliminar(slotProps.data._id)"
               />
             </template>
@@ -217,7 +203,7 @@ const methodBuscar = () => {
         </DataTable>
       </div>
     </div>
-    <div v-else>cargando datos...</div>
+    <div v-else>Cargando datos...</div>
   </div>
 </template>
 
