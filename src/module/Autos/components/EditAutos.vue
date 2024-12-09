@@ -183,7 +183,7 @@ defineExpose({ abrirDialog })
   </Dialog>
 </template>
 
-<style>
+<style scoped>
 /* Estilos del formulario */
 div {
   margin-bottom: 1rem;

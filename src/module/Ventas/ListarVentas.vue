@@ -1,119 +1,112 @@
 <script setup lang="ts">
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import RegistrarVentaForm from './components/RegistrarVentaForm.vue'
+import { onMounted, ref } from 'vue'
 import axios from 'axios'
-import { ref } from 'vue'
-import AddVentas from './components/AddVentas.vue'
 
-interface Venta {
-  _id: string
-  FechaVenta: string
-  Cliente: {
-    nombre1: string
-    nombre2: string
-    apellidoPaterno: string
-    apellidoMaterno: string
-    cedulaIdentidad: string
-  }
-  Auto: { Marca: string; Color: string; Modelo: string; Anio: number }
-  Costo: string
-  TiempoDeEntrega: string
-  Garantia: string
-}
+const ventasData = ref([]) // Datos de ventas
 
-const listaVentas = ref<Venta[]>([])
-const verFormulario = ref(false)
-
-// Listar todas las ventas desde el backend
+// Función para listar todas las ventas
 const ListarVentas = () => {
   axios
-    .get('http://localhost:3005/ventas') // Asegúrate que esta URL sea la correcta
+    .get('http://localhost:3005/ventas/listar')
     .then((response) => {
-      listaVentas.value = response.data // Asignar las ventas obtenidas a la lista
+      ventasData.value = response.data
     })
     .catch((error) => {
-      console.error('Error al obtener la lista de Ventas:', error)
+      console.error('Error al obtener la lista de ventas:', error)
     })
 }
 
-ListarVentas() // Llamar la función para cargar las ventas cuando el componente se cargue
-
-// Mostrar u ocultar el formulario
-const mostrarFormulario = () => {
-  verFormulario.value = !verFormulario.value
+// Función para eliminar una venta
+const EliminarVenta = (ventaId: string) => {
+  axios
+    .delete(`http://localhost:3005/ventas/${ventaId}`)
+    .then(() => {
+      console.log('Venta eliminada correctamente')
+      ListarVentas() // Actualizar la tabla después de eliminar
+    })
+    .catch((error) => {
+      console.error('Error al eliminar la venta:', error)
+    })
 }
+
+// Función para manejar la edición de una venta
+
+onMounted(() => {
+  ListarVentas() // Cargar datos al montar el componente
+})
 </script>
 
 <template>
-  <div>
-    <!-- Botón para mostrar/ocultar el formulario de agregar venta -->
-    <button class="toggle-form" @click="mostrarFormulario">
-      {{ verFormulario ? 'Ocultar formulario' : 'Nuevo Registro' }}
-    </button>
-
-    <!-- Mostrar el formulario AddVentas solo cuando verFormulario es verdadero -->
-    <AddVentas v-if="verFormulario" @event-nueva-venta="ListarVentas" />
-
-    <div v-if="listaVentas.length > 0" class="block">
-      <table border="1">
-        <thead>
-          <tr>
-            <th rowspan="2">Nro</th>
-
-            <!-- Encabezado agrupado para Datos del Cliente -->
-            <th colspan="5">Datos del Cliente</th>
-
-            <!-- Encabezado agrupado para Datos del Auto -->
-            <th colspan="4">Datos del Auto</th>
-
-            <th rowspan="2">Costo</th>
-            <th rowspan="2">Tiempo de Entrega</th>
-            <th rowspan="2">Garantía</th>
-            <th rowspan="2">Acciones</th>
-          </tr>
-          <tr>
-            <!-- Subencabezados para los Datos del Cliente -->
-            <th>Primer Nombre</th>
-            <th>Segundo Nombre</th>
-            <th>Apellido Paterno</th>
-            <th>Apellido Materno</th>
-            <th>Cédula de Identidad</th>
-
-            <!-- Subencabezados para los Datos del Auto -->
-            <th>Marca</th>
-            <th>Color</th>
-            <th>Modelo</th>
-            <th>Año</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in listaVentas" :key="item._id">
-            <td>{{ index + 1 }}</td>
-
-            <!-- Datos del Cliente -->
-            <td>{{ item.Cliente.nombre1 }}</td>
-            <td>{{ item.Cliente.nombre2 }}</td>
-            <td>{{ item.Cliente.apellidoPaterno }}</td>
-            <td>{{ item.Cliente.apellidoMaterno }}</td>
-            <td>{{ item.Cliente.cedulaIdentidad }}</td>
-
-            <!-- Datos del Auto -->
-            <td>{{ item.Auto.Marca }}</td>
-            <td>{{ item.Auto.Color }}</td>
-            <td>{{ item.Auto.Modelo }}</td>
-            <td>{{ item.Auto.Anio }}</td>
-
-            <!-- Otros datos de la venta -->
-            <td>{{ item.Costo }}</td>
-            <td>{{ item.TiempoDeEntrega }}</td>
-            <td>{{ item.Garantia }}</td>
-
-            <td>
-              <button class="editar">Editar</button>
-              <button class="eliminar">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else>cargando datos...</div>
-  </div>
+  <div>Listado de Ventas</div>
+  <RegistrarVentaForm @event-nueva-venta="ListarVentas"></RegistrarVentaForm>
+  <hr />
+  <DataTable :value="ventasData" tableStyle="min-width: 50rem">
+    <!-- Columna de Nombres -->
+    <Column field="Cliente.nombre1" header="Nombres">
+      <template #body="slotProps">
+        {{ slotProps.data.Cliente.nombre1 }} {{ slotProps.data.Cliente.nombre2 }}
+      </template>
+    </Column>
+    <!-- Columna de Apellidos -->
+    <Column field="Cliente.apellidoPaterno" header="Apellidos">
+      <template #body="slotProps">
+        {{ slotProps.data.Cliente.apellidoPaterno }}
+        {{ slotProps.data.Cliente.apellidoMaterno }}
+      </template>
+    </Column>
+    <!-- Resto de las columnas -->
+    <Column field="Cliente.cedulaIdentidad" header="Cédula Identidad"></Column>
+    <Column field="Autos.Marca" header="Marca"></Column>
+    <Column field="Autos.Modelo" header="Modelo"></Column>
+    <Column field="Autos.Anio" header="Año"></Column>
+    <Column field="Autos.Color" header="Color"></Column>
+    <Column field="Costo" header="Costo"></Column>
+    <Column field="TiempoDeEntrega" header="Tiempo De Entrega"></Column>
+    <Column field="Garantia" header="Garantía"></Column>
+    <!-- Columna de Acciones -->
+    <Column header="Acciones">
+      <template #body="slotProps">
+        <!-- Botón de Editar -->
+        <button class="btn btn-warning" @click="EditarVenta(slotProps.data)">Editar</button>
+        <!-- Botón de Eliminar -->
+        <button class="btn btn-danger ml-2" @click="EliminarVenta(slotProps.data._id)">
+          Eliminar
+        </button>
+      </template>
+    </Column>
+  </DataTable>
 </template>
+
+<style scoped>
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+</style>

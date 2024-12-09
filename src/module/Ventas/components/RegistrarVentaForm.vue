@@ -5,6 +5,8 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 import Dialog from 'primevue/dialog'
+import SelectAuto from './SelectAuto.vue'
+import SelectCliente from './SelectCliente.vue'
 
 const toast = useToast()
 const visible = ref(false)
@@ -13,17 +15,14 @@ const abrirDialog = () => {
   visible.value = true
 }
 
-const emit = defineEmits(['event-nuevo-auto', 'cerrar-formulario'])
-const crearAuto = reactive({
-  Marca: '',
-  Modelo: '',
-  Anio: '',
-  Color: '',
-  Tipo: '',
-  Chasis: '',
-  Vin: '',
-  OtrasCaracteristicas: '',
-  FechaIngreso: '',
+const emit = defineEmits(['event-nueva-venta', 'cerrar-formulario'])
+const crearVenta = reactive({
+  FechaVenta: null,
+  Cliente: '',
+  Autos: '',
+  Costo: null,
+  TiempoDeEntrega: null,
+  Garantia: null,
 })
 
 const confirm = useConfirm()
@@ -34,15 +33,15 @@ const enviarDatos = () => {
     icon: 'pi pi-info-circle',
     accept: () => {
       axios
-        .post('http://127.0.0.1:3005/autos', crearAuto)
+        .post('http://localhost:3005/ventas/registrar', crearVenta)
         .then((response) => {
           toast.add({
             severity: 'success',
             summary: 'Info',
-            detail: 'Auto Creado Exitosamente',
+            detail: 'Venta Creada Exitosamente',
             life: 3000,
           })
-          emit('event-nuevo-auto', response.data)
+          emit('event-nueva-venta', response.data)
           emit('cerrar-formulario')
           visible.value = false // Cerrar el dialog después de crear
         })
@@ -63,52 +62,37 @@ defineExpose({ abrirDialog })
   <ConfirmDialog />
   <Toast position="bottom-right" />
 
+  <!-- Dialog para la edición -->
+  <button @click="abrirDialog">Nuevo Registro</button>
+
   <Dialog
     v-model:visible="visible"
     modal
     header="Formulario de Registro"
-    :style="{ width: '30rem' }"
+    :style="{ width: '45rem' }"
   >
     <div>
-      <label for="marca">Marca:</label>
-      <input id="marca" type="text" v-model="crearAuto.Marca" />
+      <label for="fechaventa">Fecha de Venta:</label>
+      <input id="fechaventa" type="date" v-model="crearVenta.FechaVenta" />
+    </div>
+
+    <!-- datoscliente -->
+    <SelectCliente v-model="crearVenta.Cliente"> </SelectCliente>
+    <!-- datosAuto -->
+    <SelectAuto v-model="crearVenta.Autos"> </SelectAuto>
+    <div>
+      <label for="costo">Costo:</label>
+      <input id="costo" type="text" v-model="crearVenta.Costo" />
     </div>
     <div>
-      <label for="modelo">Modelo:</label>
-      <input id="modelo" type="text" v-model="crearAuto.Modelo" />
+      <label for="tiempo_entrega">Tiempo de Entrega:</label>
+      <input id="tiempo_entrega" type="text" v-model="crearVenta.TiempoDeEntrega" />
     </div>
     <div>
-      <label for="anio">Año:</label>
-      <input id="anio" type="text" v-model="crearAuto.Anio" />
+      <label for="garantia">Garantia:</label>
+      <input id="garantia" type="text" v-model="crearVenta.Garantia" />
     </div>
-    <div>
-      <label for="color">Color:</label>
-      <input id="color" type="text" v-model="crearAuto.Color" />
-    </div>
-    <div>
-      <label for="tipo">Tipo:</label>
-      <select id="tipo" v-model="crearAuto.Tipo">
-        <option value="Familiar">Familiar</option>
-        <option value="Corporativo">Corporativo</option>
-        <option value="Otro">Otro</option>
-      </select>
-    </div>
-    <div>
-      <label for="chasis">Chasis:</label>
-      <input id="chasis" type="text" v-model="crearAuto.Chasis" />
-    </div>
-    <div>
-      <label for="vin">Vin:</label>
-      <input id="vin" type="text" v-model="crearAuto.Vin" />
-    </div>
-    <div>
-      <label for="otrascaracteristicas">Otras Características:</label>
-      <input id="otrascaracteristicas" type="text" v-model="crearAuto.OtrasCaracteristicas" />
-    </div>
-    <div>
-      <label for="fechaingreso">Fecha de Ingreso:</label>
-      <input id="fechaingreso" type="date" v-model="crearAuto.FechaIngreso" />
-    </div>
+
     <div class="boton-registro">
       <button icon="pi pi-check" @click="enviarDatos">Registrar</button>
     </div>

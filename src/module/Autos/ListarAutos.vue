@@ -207,7 +207,7 @@ const methodBuscar = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .dialog-buttons {
   display: flex;
   justify-content: flex-end;
