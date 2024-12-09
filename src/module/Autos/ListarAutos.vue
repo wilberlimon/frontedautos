@@ -115,7 +115,7 @@ const methodBuscar = () => {
       if (response.data && response.data.length > 0) {
         listaAutos.value = response.data
       } else {
-        alert('No se encontraron resultados para esta marca.')
+        alert('La Marca del auto no se encutra registrada')
         listaAutos.value = []
       }
     })
@@ -149,7 +149,13 @@ const methodBuscar = () => {
       </div>
     </Dialog>
 
-    <button class="toggle-form" @click="mostrarFormulario">Nuevo Registro</button>
+    <Button
+  icon="pi pi-plus"
+  aria-label="Añadir"
+  @click="mostrarFormulario"
+  style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+/>
+
 
     <AddAutos
       ref="AddAutosRef"
@@ -172,7 +178,12 @@ const methodBuscar = () => {
         class="input-busqueda"
         placeholder="Buscar por marca..."
       />
-      <button @click="methodBuscar" class="buscar">Buscar</button>
+      <Button
+    icon="pi pi-search"
+    aria-label="Search"
+    @click="methodBuscar"
+    style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px;"
+  />
     </div>
 
     <div v-if="listaAutos.length > 0" class="block">
@@ -192,12 +203,18 @@ const methodBuscar = () => {
           <Column field="Tipo" header="Tipo" sortable></Column>
           <Column header="Acciones">
             <template #body="slotProps">
-              <Button icon="pi pi-pencil" @click="actualizarAutos(slotProps.data)" />
               <Button
-                icon="pi pi-times"
-                severity="danger"
-                @click="confirmarEliminar(slotProps.data._id)"
+              icon="pi pi-pencil"
+              @click="actualizarAutos(slotProps.data)"
+              style="background-color: #065813; color: white; border-color: #065813; margin-right: 15px;"
               />
+
+              <Button
+              icon="pi pi-times"
+              @click="confirmarEliminar(slotProps.data._id)"
+              style="background-color: #E00000; color: white; border-color: #E00000;"
+              />
+
             </template>
           </Column>
         </DataTable>
@@ -212,5 +229,14 @@ const methodBuscar = () => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+.buscar-container {
+  display: flex;
+  align-items: center;
+}
+.input-busqueda {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
 }
 </style>
