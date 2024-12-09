@@ -47,7 +47,8 @@ onMounted(() => {
     <!-- Columna de Nombres -->
     <Column field="Cliente.nombre1" header="Nombres">
       <template #body="slotProps">
-        {{ slotProps.data.Cliente.nombre1 }} {{ slotProps.data.Cliente.nombre2 }}
+        {{ slotProps.data.Cliente.nombre1 }}
+        {{ slotProps.data.Cliente.nombre2 }}
       </template>
     </Column>
     <!-- Columna de Apellidos -->
