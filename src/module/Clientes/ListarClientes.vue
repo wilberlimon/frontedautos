@@ -4,6 +4,8 @@ import { ref } from 'vue'
 import AddClientes from './components/AddClientes.vue'
 import EditClientes from './components/EditClientes.vue'
 import Button from 'primevue/button'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 interface Cliente {
   _id: string
@@ -51,11 +53,8 @@ const eliminarCliente = (id: string) => {
     })
 }
 
-
-
 const actualizarCliente = (itemcliente: Cliente) => {
   clienteSeleccionado.value = { ...itemcliente } // Copia para evitar mutación directa
-
 }
 
 const methodBuscar = () => {
@@ -91,10 +90,10 @@ const methodBuscar = () => {
 <template>
   <div>
     <Button
-    icon="pi pi-plus"
-    aria-label="Añadir"
-    @click="mostrarFormulario"
-    style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+      icon="pi pi-plus"
+      aria-label="Añadir"
+      @click="mostrarFormulario"
+      style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
     />
 
     <AddClientes
@@ -109,7 +108,8 @@ const methodBuscar = () => {
       @cerrar-formulario="clienteSeleccionado = null"
       @event-edit-cliente="ListarClientes"
     />
-    <!-- DESDE AQUI -->
+
+    <!-- Caja de búsqueda encima de la tabla -->
     <div class="buscar-container">
       <input
         type="text"
@@ -118,41 +118,49 @@ const methodBuscar = () => {
         placeholder="Cedula de Identidad..."
       />
       <Button
-      icon="pi pi-search"
-      aria-label="Search"
-      @click="methodBuscar"
-      style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px;"
+        icon="pi pi-search"
+        aria-label="Search"
+        @click="methodBuscar"
+        style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px;"
       />
-     <!-- HASTAAQUI -->
-
-    <div v-if="listaClientes.length > 0" class="block">
-      <table border="1">
-        <tr>
-          <td>Nro</td>
-          <td>Primer Nombre</td>
-          <td>Apellido Paterno</td>
-          <td>Apellido Materno</td>
-          <td>Cédula de Identidad</td>
-          <td>Teléfono</td>
-          <td>Acciones</td>
-        </tr>
-        <tr v-for="(item, index) in listaClientes" :key="item._id">
-          <td>{{ index + 1 }}</td>
-          <td>{{ item.nombre1 }}</td>
-          <td>{{ item.apellidoPaterno }}</td>
-          <td>{{ item.apellidoMaterno }}</td>
-          <td>{{ item.cedulaIdentidad }}</td>
-          <td>{{ item.telefono }}</td>
-          <td>
-            <button class="editar" @click="actualizarCliente(item)">Editar</button>
-            <button class="eliminar" @click="eliminarCliente(item._id)">Eliminar</button>
-          </td>
-        </tr>
-      </table>
     </div>
+
+    <!-- Tabla de clientes -->
+    <div v-if="listaClientes.length > 0" class="block">
+      <div class="card">
+        <DataTable
+          :value="listaClientes"
+          showGridlines
+          paginator
+          :rows="5"
+          :rowsPerPageOptions="[2, 3]"
+          tableStyle="min-width: 50rem"
+        >
+          <Column field="nombre1" header="Primer Nombre" sortable></Column>
+          <Column field="apellidoPaterno" header="Apellido Paterno" sortable></Column>
+          <Column field="apellidoMaterno" header="Apellido Materno " sortable></Column>
+          <Column field="cedulaIdentidad" header="Cedula de Identidad" sortable></Column>
+          <Column field="telefono" header="Telefono" sortable></Column>
+          <Column header="Acciones">
+            <template #body="slotProps">
+              <Button
+                icon="pi pi-pencil"
+                @click="actualizarCliente(slotProps.data)"
+                style="background-color: #065813; color: white; border-color: #065813; margin-right: 15px;"
+              />
+              <Button
+                icon="pi pi-times"
+                @click="eliminarCliente(slotProps.data._id)"
+                style="background-color: #E00000; color: white; border-color: #E00000;"
+              />
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+    </div>
+
     <div v-else>cargando datos...</div>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -161,13 +169,20 @@ const methodBuscar = () => {
   justify-content: flex-end;
   gap: 10px;
 }
+
 .buscar-container {
   display: flex;
   align-items: center;
+  margin-bottom: 15px; /* Espacio debajo de la caja de búsqueda */
 }
+
 .input-busqueda {
   flex: 1;
   padding: 8px;
   font-size: 14px;
+}
+
+.card {
+  margin-top: 20px; /* Espacio entre la caja de búsqueda y la tabla */
 }
 </style>
