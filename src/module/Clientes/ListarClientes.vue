@@ -3,6 +3,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import AddClientes from './components/AddClientes.vue'
 import EditClientes from './components/EditClientes.vue'
+import Button from 'primevue/button'
 
 interface Cliente {
   _id: string
@@ -50,8 +51,11 @@ const eliminarCliente = (id: string) => {
     })
 }
 
+
+
 const actualizarCliente = (itemcliente: Cliente) => {
   clienteSeleccionado.value = { ...itemcliente } // Copia para evitar mutación directa
+
 }
 
 const methodBuscar = () => {
@@ -86,9 +90,12 @@ const methodBuscar = () => {
 
 <template>
   <div>
-    <button class="toggle-form" @click="mostrarFormulario">
-      {{ verFormulario ? 'Ocultar formulario' : 'Nuevo Registro' }}
-    </button>
+    <Button
+    icon="pi pi-plus"
+    aria-label="Añadir"
+    @click="mostrarFormulario"
+    style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+    />
 
     <AddClientes
       v-if="verFormulario"
@@ -102,8 +109,7 @@ const methodBuscar = () => {
       @cerrar-formulario="clienteSeleccionado = null"
       @event-edit-cliente="ListarClientes"
     />
-
-    <!-- Campos de búsqueda -->
+    <!-- DESDE AQUI -->
     <div class="buscar-container">
       <input
         type="text"
@@ -111,8 +117,13 @@ const methodBuscar = () => {
         class="input-busqueda"
         placeholder="Cedula de Identidad..."
       />
-      <button @click="methodBuscar" class="buscar">Buscar</button>
-    </div>
+      <Button
+      icon="pi pi-search"
+      aria-label="Search"
+      @click="methodBuscar"
+      style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px;"
+      />
+     <!-- HASTAAQUI -->
 
     <div v-if="listaClientes.length > 0" class="block">
       <table border="1">
@@ -141,4 +152,22 @@ const methodBuscar = () => {
     </div>
     <div v-else>cargando datos...</div>
   </div>
+</div>
 </template>
+
+<style scoped>
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.buscar-container {
+  display: flex;
+  align-items: center;
+}
+.input-busqueda {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+</style>
