@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref} from 'vue'
 import AddClientes from './components/AddClientes.vue'
 import EditClientes from './components/EditClientes.vue'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import 'primeicons/primeicons.css'
 
 interface Cliente {
   _id: string
