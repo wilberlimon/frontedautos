@@ -4,6 +4,9 @@ import axios from 'axios'
 import Select from 'primevue/select'
 import { onMounted, ref, watch } from 'vue'
 
+
+const AddClientesRef = ref()
+
 const listaClientes = ref([])
 const selectedClientes = ref()
 const verFormulario = ref(false) // Controla la visibilidad del formulario
@@ -39,11 +42,15 @@ watch(selectedClientes, (v) => {
   }
 })
 
-// Alternar visibilidad del formulario
-const mostrarFormulario = () => {
-  verFormulario.value = true // Mostrar el formulario
-}
 
+const mostrarFormulario = () => {
+  if (AddClientesRef.value) {
+    AddClientesRef.value.abrirDialog()
+  } else {
+    console.error('Referencia AddClientesRef no está definida')
+  }
+}
+// Alternar visibilidad del formulario
 const cerrarFormulario = () => {
   verFormulario.value = false // Ocultar el formulario
 }
@@ -72,7 +79,7 @@ onMounted(() => {
 
   <!-- Formulario de nuevo cliente -->
   <AddClientes
-    v-if="verFormulario"
+    ref="AddClientesRef"
     @event-nuevo-cliente="ListarClientes"
     @cerrar-formulario="cerrarFormulario"
   ></AddClientes>

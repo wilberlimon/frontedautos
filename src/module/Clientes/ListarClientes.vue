@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { ref} from 'vue'
+import { ref, nextTick} from 'vue'
+import 'primeicons/primeicons.css'
 import AddClientes from './components/AddClientes.vue'
 import EditClientes from './components/EditClientes.vue'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import 'primeicons/primeicons.css'
+import Dialog from 'primevue/dialog'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+
 
 interface Cliente {
   _id: string
@@ -24,8 +29,17 @@ interface Cliente {
 
 const listaClientes = ref<Cliente[]>([])
 const verFormulario = ref(false)
+const verFormularioEditar = ref(false)
 const busquedacedulaIdentidad = ref('') // Campo de búsqueda por cédula
 const clienteSeleccionado = ref<Cliente | null>(null)
+  const dialogEliminar = ref(false)
+const clienteAEliminar = ref<string | null>(null)
+const toast = useToast()
+
+// desdeaqui
+const AddClientesRef = ref<InstanceType<typeof AddClientes> | null>(null)
+const EditClientesRef = ref<InstanceType<typeof EditClientes> | null>(null)
+// hastaaqui
 
 const ListarClientes = () => {
   axios
@@ -39,24 +53,58 @@ const ListarClientes = () => {
 }
 ListarClientes()
 
+// desdeaqui
 const mostrarFormulario = () => {
-  verFormulario.value = !verFormulario.value
+  if (AddClientesRef.value) {
+    AddClientesRef.value.abrirDialog()
+  } else {
+    console.error('Referencia AddAutosRef no está definida')
+  }
+}
+// hastaaqui
+const cerrarFormulario = () => {
+  verFormulario.value = false
 }
 
-const eliminarCliente = (id: string) => {
-  axios
-    .delete(`http://localhost:3005/clientes/${id}`)
+const confirmarEliminar = (id: string) => {
+  clienteAEliminar.value = id
+  dialogEliminar.value = true
+}
+
+
+// desdeaqui
+const eliminarCliente = () => {
+  if (clienteAEliminar.value) {
+    axios
+    .delete(`http://localhost:3005/clientes/${clienteAEliminar.value}`)
     .then(() => {
       ListarClientes()
-    })
-    .catch((error) => {
-      console.error('Error al eliminar cliente:', error)
-    })
+        toast.add({
+          severity: 'error',
+          summary: 'Eliminado',
+          detail: 'Registro eliminado exitosamente',
+          life: 3000,
+        })
+        dialogEliminar.value = false
+        clienteAEliminar.value = null
+      })
+      .catch((error) => {
+        console.error('Error al eliminar cliente:', error)
+      })
+  }
 }
+// hastaaqui
 
+// desde aqui
 const actualizarCliente = (itemcliente: Cliente) => {
-  clienteSeleccionado.value = { ...itemcliente } // Copia para evitar mutación directa
+  clienteSeleccionado.value = itemcliente
+  verFormularioEditar.value = true
+  nextTick(() => {
+    // Asegura que Vue actualice la vista
+  })
 }
+// hasta aqui
+
 
 const methodBuscar = () => {
   // Validar si el campo está vacío
@@ -89,7 +137,27 @@ const methodBuscar = () => {
 </script>
 
 <template>
-  <div>
+ <div>
+    <Toast />
+    <Dialog
+      v-model:visible="dialogEliminar"
+      header="Confirmar eliminación"
+      modal
+      style="width: 30vw"
+      :closable="false"
+    >
+      <p>¿Estás seguro de que deseas eliminar este registro?</p>
+      <div class="dialog-buttons">
+        <Button
+          label="Cancelar"
+          icon="pi pi-times"
+          severity="secondary"
+          @click="dialogEliminar = false"
+        />
+        <Button label="Eliminar" icon="pi pi-check" severity="danger" @click="eliminarCliente" />
+      </div>
+    </Dialog>
+
     <Button
       icon="pi pi-plus"
       aria-label="Añadir"
@@ -98,16 +166,17 @@ const methodBuscar = () => {
     />
 
     <AddClientes
-      v-if="verFormulario"
-      @cerrar-formulario="verFormulario = false"
-      @event-nuevo-cliente="ListarClientes"
+      ref="AddClientesRef"
+      @cerrar-formulario="cerrarFormulario"
+      @event-nuevo-auto="ListarClientes"
     />
 
-    <EditClientes
-      v-if="clienteSeleccionado"
+    <EditAutos
+      ref="EditClientesRef"
+      v-if="verFormularioEditar && clienteSeleccionado"
       :seleccionado="clienteSeleccionado"
-      @cerrar-formulario="clienteSeleccionado = null"
-      @event-edit-cliente="ListarClientes"
+      @cerrar-formulario="cerrarFormulario"
+      @event-edit-auto="ListarClientes"
     />
 
     <!-- Caja de búsqueda encima de la tabla -->
@@ -151,7 +220,7 @@ const methodBuscar = () => {
               />
               <Button
                 icon="pi pi-times"
-                @click="eliminarCliente(slotProps.data._id)"
+                @click="confirmarEliminar(slotProps.data._id)"
                 style="background-color: #E00000; color: white; border-color: #E00000;"
               />
             </template>
