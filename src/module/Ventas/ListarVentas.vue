@@ -40,7 +40,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>Listado de Ventas</div>
   <RegistrarVentaForm @event-nueva-venta="ListarVentas"></RegistrarVentaForm>
   <hr />
   <DataTable :value="ventasData"  paginator :rowsPerPageOptions="[2, 4, 6]" tableStyle="min-width: 50rem">
@@ -71,7 +70,7 @@ onMounted(() => {
     <Column header="Acciones">
       <template #body="slotProps">
         <!-- Botón de Editar -->
-        <button class="btn btn-warning" @click="EditarVenta(slotProps.data)">Editar</button>
+        <!-- <button class="btn btn-warning" @click="EditarVenta(slotProps.data)">Editar</button> -->
         <!-- Botón de Eliminar -->
         <button class="btn btn-danger ml-2" @click="EliminarVenta(slotProps.data._id)">
           Eliminar

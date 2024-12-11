@@ -6,6 +6,7 @@ import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 import Dialog from 'primevue/dialog'
 import SelectAuto from './SelectAuto.vue'
+import Button from 'primevue/button'
 import SelectCliente from './SelectCliente.vue'
 
 const toast = useToast()
@@ -50,6 +51,7 @@ const enviarDatos = () => {
         })
     },
     reject: () => {
+      visible.value = false // Cerrar el dialog en rechazo también
       console.log('Registro cancelado')
     },
   })
@@ -62,9 +64,15 @@ defineExpose({ abrirDialog })
   <ConfirmDialog />
   <Toast position="bottom-right" />
 
-  <!-- Dialog para la edición -->
-  <button @click="abrirDialog">Nuevo Registro</button>
+  <!-- Botón para abrir el diálogo -->
+  <Button
+      icon="pi pi-plus"
+      aria-label="Añadir"
+      @click="abrirDialog"
+      style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+    />
 
+  <!-- Diálogo para el formulario -->
   <Dialog
     v-model:visible="visible"
     modal
@@ -76,9 +84,9 @@ defineExpose({ abrirDialog })
       <input id="fechaventa" type="date" v-model="crearVenta.FechaVenta" />
     </div>
 
-    <!-- datoscliente -->
+    <!-- Datos del cliente -->
     <SelectCliente v-model="crearVenta.Cliente"> </SelectCliente>
-    <!-- datosAuto -->
+    <!-- Datos del auto -->
     <SelectAuto v-model="crearVenta.Autos"> </SelectAuto>
     <div>
       <label for="costo">Costo:</label>
