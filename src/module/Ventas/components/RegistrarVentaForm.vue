@@ -77,7 +77,7 @@ defineExpose({ abrirDialog })
     v-model:visible="visible"
     modal
     header="Formulario de Registro"
-    :style="{ width: '35rem' }"
+    :style="{ width: '30rem' }"
   >
     <div>
       <label for="fechaventa">Fecha de Venta:</label>

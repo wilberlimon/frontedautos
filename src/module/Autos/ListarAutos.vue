@@ -188,7 +188,7 @@ const methodBuscar = () => {
     style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px;"
   />
     </div>
-
+<br>
     <div v-if="listaAutos.length > 0" class="block">
       <div class="card">
         <DataTable
