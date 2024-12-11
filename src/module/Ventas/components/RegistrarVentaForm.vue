@@ -66,18 +66,18 @@ defineExpose({ abrirDialog })
 
   <!-- Botón para abrir el diálogo -->
   <Button
-      icon="pi pi-plus"
-      aria-label="Añadir"
-      @click="abrirDialog"
-      style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
-    />
+    icon="pi pi-plus"
+    aria-label="Añadir"
+    @click="abrirDialog"
+    style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+  />
 
   <!-- Diálogo para el formulario -->
   <Dialog
     v-model:visible="visible"
     modal
     header="Formulario de Registro"
-    :style="{ width: '45rem' }"
+    :style="{ width: '35rem' }"
   >
     <div>
       <label for="fechaventa">Fecha de Venta:</label>
@@ -126,4 +126,40 @@ defineExpose({ abrirDialog })
 .boton-registro button:hover {
   background-color: #044c0d;
 }
+
+/* Estilos para los campos de texto */
+div {
+  margin-bottom: 1rem;
+}
+
+div label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: black;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+
+div input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Para que el padding no afecte el tamaño total del campo */
+}
+
+div input:focus {
+  border-color: #065813;
+  outline: none;
+}
+
+/* Estilo del diálogo */
+:deep(.p-dialog .p-dialog-content) {
+  padding: 2rem;
+  width: 100%; /* Ocupa todo el espacio del dialog */
+}
+
 </style>

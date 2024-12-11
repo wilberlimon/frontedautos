@@ -60,20 +60,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card flex justify-center">
-    <label>Autos:</label>
-    <Select
-      v-model="selectedAutos"
-      :options="listaAutos"
-      :filter="true"
-      :checkmark="true"
-      :showClear="true"
-      optionLabel="Marca"
-      placeholder="Seleccione un Auto"
-      class="w-full md:w-56"
-    ></Select>
+  <div class="card flex justify-center items-center">
+    <div class="select-container">
+      <label>Autos:</label>
+      <Select
+        v-model="selectedAutos"
+        :options="listaAutos"
+        :filter="true"
+        :checkmark="true"
+        :showClear="true"
+        optionLabel="Marca"
+        placeholder="Seleccione un Auto"
+        class="select-auto"
+      ></Select>
+    </div>
+    <button @click="mostrarFormulario" class="btn-nuevo-auto">
+      Nuevo Auto
+    </button>
   </div>
-  <button @click="mostrarFormulario" class="btn btn-primary">Nuevo Auto</button>
 
   <!-- Formulario de nuevo auto -->
   <AddAutos
@@ -82,3 +86,48 @@ onMounted(() => {
     @cerrar-formulario="cerrarFormulario"
   ></AddAutos>
 </template>
+
+<style scoped>
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Espacio entre el select y el botón */
+}
+
+label{
+  margin-bottom: 0.5rem;
+  color: black;
+  font-weight: bold;
+}
+
+.select-container {
+  margin-top: 15px;
+  flex-grow: 1;
+}
+
+.select-auto {
+  width: 95%; /* El Select ocupa el 95% del espacio disponible */
+}
+
+.btn-nuevo-auto {
+  background-color: #065813;
+  color: white;
+  border: 2px solid #065813;
+  border-radius: 8px; /* Bordes ligeramente curvados */
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-top: 35px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1; /* Alineación del texto */
+}
+
+.btn-nuevo-auto:hover {
+  background-color: #044c0d;
+  border-color: #044c0d;
+}
+</style>

@@ -67,55 +67,84 @@ defineExpose({ abrirDialog })
     v-model:visible="visible"
     modal
     header="Formulario de Registro"
-    :style="{ width: '30rem' }"
+    :style="{ width: '35rem' }"
   >
-    <div>
-      <label for="marca">Marca:</label>
-      <input id="marca" type="text" v-model="crearAuto.Marca" />
-    </div>
-    <div>
-      <label for="modelo">Modelo:</label>
-      <input id="modelo" type="text" v-model="crearAuto.Modelo" />
-    </div>
-    <div>
-      <label for="anio">Año:</label>
-      <input id="anio" type="text" v-model="crearAuto.Anio" />
-    </div>
-    <div>
-      <label for="color">Color:</label>
-      <input id="color" type="text" v-model="crearAuto.Color" />
-    </div>
-    <div>
-      <label for="tipo">Tipo:</label>
-      <select id="tipo" v-model="crearAuto.Tipo">
-        <option value="Familiar">Familiar</option>
-        <option value="Corporativo">Corporativo</option>
-        <option value="Otro">Otro</option>
-      </select>
-    </div>
-    <div>
-      <label for="chasis">Chasis:</label>
-      <input id="chasis" type="text" v-model="crearAuto.Chasis" />
-    </div>
-    <div>
-      <label for="vin">Vin:</label>
-      <input id="vin" type="text" v-model="crearAuto.Vin" />
-    </div>
-    <div>
-      <label for="otrascaracteristicas">Otras Características:</label>
-      <input id="otrascaracteristicas" type="text" v-model="crearAuto.OtrasCaracteristicas" />
-    </div>
-    <div>
-      <label for="fechaingreso">Fecha de Ingreso:</label>
-      <input id="fechaingreso" type="date" v-model="crearAuto.FechaIngreso" />
-    </div>
-    <div class="boton-registro">
-      <button icon="pi pi-check" @click="enviarDatos">Registrar</button>
-    </div>
+    <form class="formulario">
+      <div class="campo">
+        <label for="marca">Marca:</label>
+        <input id="marca" type="text" v-model="crearAuto.Marca" />
+      </div>
+      <div class="campo">
+        <label for="modelo">Modelo:</label>
+        <input id="modelo" type="text" v-model="crearAuto.Modelo" />
+      </div>
+      <div class="campo">
+        <label for="anio">Año:</label>
+        <input id="anio" type="text" v-model="crearAuto.Anio" />
+      </div>
+      <div class="campo">
+        <label for="color">Color:</label>
+        <input id="color" type="text" v-model="crearAuto.Color" />
+      </div>
+      <div class="campo">
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" v-model="crearAuto.Tipo">
+          <option value="Familiar">Familiar</option>
+          <option value="Corporativo">Corporativo</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="chasis">Chasis:</label>
+        <input id="chasis" type="text" v-model="crearAuto.Chasis" />
+      </div>
+      <div class="campo">
+        <label for="vin">Vin:</label>
+        <input id="vin" type="text" v-model="crearAuto.Vin" />
+      </div>
+      <div class="campo">
+        <label for="otrascaracteristicas">Otras Características:</label>
+        <input id="otrascaracteristicas" type="text" v-model="crearAuto.OtrasCaracteristicas" />
+      </div>
+      <div class="campo">
+        <label for="fechaingreso">Fecha de Ingreso:</label>
+        <input id="fechaingreso" type="date" v-model="crearAuto.FechaIngreso" />
+      </div>
+      <div class="boton-registro">
+        <button icon="pi pi-check" @click.prevent="enviarDatos">Registrar</button>
+      </div>
+    </form>
   </Dialog>
 </template>
 
 <style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo label {
+  margin-bottom: 0.5rem;
+  color: black;
+  font-weight: bold;
+}
+.campo input,
+.campo select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .boton-registro {
   margin-top: 1rem;
 }
@@ -132,6 +161,6 @@ defineExpose({ abrirDialog })
 }
 
 .boton-registro button:hover {
-  background-color: #044c0d;
+  background-color: #033a0a;
 }
 </style>

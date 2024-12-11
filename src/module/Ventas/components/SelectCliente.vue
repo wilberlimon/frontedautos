@@ -4,7 +4,6 @@ import axios from 'axios'
 import Select from 'primevue/select'
 import { onMounted, ref, watch } from 'vue'
 
-
 const AddClientesRef = ref()
 
 const listaClientes = ref([])
@@ -42,7 +41,6 @@ watch(selectedClientes, (v) => {
   }
 })
 
-
 const mostrarFormulario = () => {
   if (AddClientesRef.value) {
     AddClientesRef.value.abrirDialog()
@@ -50,6 +48,7 @@ const mostrarFormulario = () => {
     console.error('Referencia AddClientesRef no está definida')
   }
 }
+
 // Alternar visibilidad del formulario
 const cerrarFormulario = () => {
   verFormulario.value = false // Ocultar el formulario
@@ -62,20 +61,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card flex justify-center">
-    <label>Clientes:</label>
-    <Select
-      v-model="selectedClientes"
-      :options="listaClientes"
-      :filter="true"
-      :checkmark="true"
-      :showClear="true"
-      optionLabel="cedulaIdentidad"
-      placeholder="Seleccione un Cliente"
-      class="w-full md:w-56"
-    ></Select>
+  <div class="card flex justify-center items-center">
+    <div class="select-container">
+      <label>Clientes:</label>
+      <Select
+        v-model="selectedClientes"
+        :options="listaClientes"
+        :filter="true"
+        :checkmark="true"
+        :showClear="true"
+        optionLabel="cedulaIdentidad"
+        placeholder="Seleccione un Cliente"
+        class="select-client"
+      ></Select>
+    </div>
+    <button @click="mostrarFormulario" class="btn-nuevo-cliente">
+      Nuevo Cliente
+    </button>
   </div>
-  <button @click="mostrarFormulario" class="btn btn-primary">Nuevo Cliente</button>
 
   <!-- Formulario de nuevo cliente -->
   <AddClientes
@@ -84,3 +87,47 @@ onMounted(() => {
     @cerrar-formulario="cerrarFormulario"
   ></AddClientes>
 </template>
+
+<style scoped>
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Espacio entre el select y el botón */
+}
+
+.select-container {
+  flex-grow: 1;
+}
+
+.select-client {
+  width: 95%; /* El Select ocupa el 95% del espacio disponible */
+}
+
+.btn-nuevo-cliente {
+  background-color: #065813;
+  color: white;
+  border: 2px solid #065813;
+  border-radius: 8px; /* Bordes ligeramente curvados */
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  height: 40px;
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  line-height: 1; /* Alineación del texto */
+}
+
+label{
+  margin-bottom: 0.5rem;
+  color: black;
+  font-weight: bold;
+}
+
+.btn-nuevo-cliente:hover {
+  background-color: #044c0d;
+  border-color: #044c0d;
+}
+</style>

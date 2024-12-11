@@ -165,6 +165,7 @@ const methodBuscar = () => {
       style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
     />
     <hr />
+    <br>
     <AddClientes
       ref="AddClientesRef"
       @cerrar-formulario="cerrarFormulario"
@@ -208,10 +209,10 @@ const methodBuscar = () => {
           tableStyle="min-width: 50rem"
         >
           <Column field="nombre1" header="Primer Nombre" sortable></Column>
-          <Column field="apellidoPaterno" header="Apellido Paterno" sortable></Column>
-          <Column field="apellidoMaterno" header="Apellido Materno " sortable></Column>
-          <Column field="cedulaIdentidad" header="Cedula de Identidad" sortable></Column>
-          <Column field="telefono" header="Telefono" sortable></Column>
+          <Column field="apellidoPaterno" header="Apellido Paterno" ></Column>
+          <Column field="apellidoMaterno" header="Apellido Materno " ></Column>
+          <Column field="cedulaIdentidad" header="Cedula de Identidad" ></Column>
+          <Column field="telefono" header="Telefono" ></Column>
           <Column header="Acciones">
             <template #body="slotProps">
               <Button

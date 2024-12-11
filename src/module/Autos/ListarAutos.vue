@@ -156,6 +156,7 @@ const methodBuscar = () => {
   style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
 />
 <hr />
+<br>
 
     <AddAutos
       ref="AddAutosRef"
@@ -199,10 +200,10 @@ const methodBuscar = () => {
           tableStyle="min-width: 50rem"
         >
           <Column field="Marca" header="Marca" sortable></Column>
-          <Column field="Modelo" header="Modelo" sortable></Column>
+          <Column field="Modelo" header="Modelo" ></Column>
           <Column field="Anio" header="Año" sortable></Column>
-          <Column field="Color" header="Color" sortable></Column>
-          <Column field="Tipo" header="Tipo" sortable></Column>
+          <Column field="Color" header="Color" ></Column>
+          <Column field="Tipo" header="Tipo" ></Column>
           <Column header="Acciones">
             <template #body="slotProps">
               <Button

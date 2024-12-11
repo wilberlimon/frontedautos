@@ -1,4 +1,3 @@
-<!-- desde aqui -->
 <script setup lang="ts">
 import axios from 'axios'
 import { reactive, ref } from 'vue'
@@ -6,7 +5,6 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 import Dialog from 'primevue/dialog'
-
 
 const toast = useToast()
 const visible = ref(false)
@@ -29,7 +27,6 @@ const crearCliente = reactive({
   email: '',
 })
 const confirm = useConfirm()
-// desde aqui
 const enviarDatos = () => {
   confirm.require({
     message: '¿Está seguro de registrar el Auto?',
@@ -58,7 +55,6 @@ const enviarDatos = () => {
     },
   })
 }
-// hastaaqui
 
 defineExpose({ abrirDialog })
 </script>
@@ -71,67 +67,101 @@ defineExpose({ abrirDialog })
     v-model:visible="visible"
     modal
     header="Formulario de Registro"
-    :style="{ width: '30rem' }"
+    :style="{ width: '35rem' }"
   >
-  <div>
-    <label for="nombre1">Primer Nombre: </label>
-    <input id="nombre1" type="text" v-model="crearCliente.nombre1" />
-  </div>
-
-  <div>
-    <label for="nombre2">Segundo Nombre: </label>
-    <input id="nombre2" type="text" v-model="crearCliente.nombre2" />
-  </div>
-
-  <div>
-    <label for="apellidopaterno">Apellido Paterno: </label>
-    <input id="apellidopaterno" type="text" v-model="crearCliente.apellidoPaterno" />
-  </div>
-
-  <div>
-    <label for="apellidomaterno">Apellido Materno: </label>
-    <input id="apellidomaterno" type="text" v-model="crearCliente.apellidoMaterno" />
-  </div>
-
-  <div>
-    <label for="fechanacimiento">Fecha de Nacimiento:: </label>
-    <input id="fechanacimiento" type="Date" v-model="crearCliente.FechaNacimiento" />
-  </div>
-
-  <div>
-    <label for="sexo">Sexo: </label>
-    <select v-model="crearCliente.sexo">
-      <option value="M">Masculino</option>
-      <option value="F">Femenino</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="cedulaidentidad">Cedula de Identidad: </label>
-    <input id="cedulaidentidad" type="text" v-model="crearCliente.cedulaIdentidad" />
-  </div>
-
-  <div>
-    <label for="direccion">Dirección: </label>
-    <input id="direcion" type="text" v-model="crearCliente.direccion" />
-  </div>
-
-  <div>
-    <label for="telefono">Telefono:</label>
-    <input id="telefono" type="text" v-model="crearCliente.telefono" />
-  </div>
-
-  <div>
-    <label for="email">Correo Electronico:</label>
-    <input id="email" type="text" v-model="crearCliente.email" />
-  </div>
-    <div class="boton-registro">
-      <button class="btn-registrar" @click="enviarDatos">Registrar</button>
+  <form class="formulario">
+    <div class="campo">
+      <label for="nombre1">Primer Nombre: </label>
+      <input id="nombre1" type="text" v-model="crearCliente.nombre1" />
     </div>
+
+    <div class="campo">
+      <label for="nombre2">Segundo Nombre: </label>
+      <input id="nombre2" type="text" v-model="crearCliente.nombre2" />
+    </div>
+
+    <div class="campo">
+      <label for="apellidopaterno">Apellido Paterno: </label>
+      <input id="apellidopaterno" type="text" v-model="crearCliente.apellidoPaterno" />
+    </div>
+
+    <div class="campo">
+      <label for="apellidomaterno">Apellido Materno: </label>
+      <input id="apellidomaterno" type="text" v-model="crearCliente.apellidoMaterno" />
+    </div>
+
+    <div class="campo">
+      <label for="fechanacimiento">Fecha de Nacimiento: </label>
+      <input id="fechanacimiento" type="date" v-model="crearCliente.FechaNacimiento" />
+    </div>
+
+    <div class="campo">
+      <label for="sexo">Sexo: </label>
+      <select id="sexo" v-model="crearCliente.sexo">
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="cedulaidentidad">Cedula de Identidad: </label>
+      <input id="cedulaidentidad" type="text" v-model="crearCliente.cedulaIdentidad" />
+    </div>
+
+    <div class="campo">
+      <label for="direccion">Dirección: </label>
+      <input id="direccion" type="text" v-model="crearCliente.direccion" />
+    </div>
+
+    <div class="campo">
+      <label for="telefono">Telefono:</label>
+      <input id="telefono" type="text" v-model="crearCliente.telefono" />
+    </div>
+
+    <div class="campo">
+      <label for="email">Correo Electronico:</label>
+      <input id="email" type="text" v-model="crearCliente.email" />
+    </div>
+
+    <div class="boton-registro">
+      <button @click.prevent="enviarDatos">Registrar</button>
+    </div>
+  </form>
   </Dialog>
 </template>
 
 <style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 30rem;
+  margin: auto;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.campo label {
+  margin-bottom: 0.5rem;
+  color: black;
+  font-weight: bold;
+}
+
+.campo input,
+.campo select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .boton-registro {
   margin-top: 1rem;
 }
@@ -148,8 +178,6 @@ defineExpose({ abrirDialog })
 }
 
 .boton-registro button:hover {
-  background-color: #044c0d;
+  background-color: #033a0a;
 }
 </style>
-
- <!-- hastaaqui -->

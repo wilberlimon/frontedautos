@@ -50,7 +50,7 @@ onMounted(() => {
     :rowsPerPageOptions="[2, 4, 6]"
     :rows="2"
     tableStyle="min-width: 50rem">
-
+    <br>
     <!-- Columna de Nombres -->
     <Column field="Cliente.nombre1" header="Nombres" sortable>
       <template #body="slotProps">
@@ -72,7 +72,7 @@ onMounted(() => {
     <Column field="Autos.Anio" header="Año"></Column>
     <Column field="Autos.Color" header="Color"></Column>
     <Column field="Costo" header="Costo"></Column>
-    <Column field="TiempoDeEntrega" header="Tiempo De Entrega"></Column>
+    <Column field="TiempoDeEntrega" header="Tiempo Entrega"></Column>
     <Column field="Garantia" header="Garantía"></Column>
     <!-- Columna de Acciones -->
     <Column header="Acciones">
