@@ -164,7 +164,7 @@ const methodBuscar = () => {
       @click="mostrarFormulario"
       style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
     />
-
+    <hr />
     <AddClientes
       ref="AddClientesRef"
       @cerrar-formulario="cerrarFormulario"
@@ -180,6 +180,7 @@ const methodBuscar = () => {
     />
 
     <!-- Caja de búsqueda encima de la tabla -->
+     <br>
     <div class="buscar-container">
       <input
         type="text"

@@ -155,7 +155,7 @@ const methodBuscar = () => {
   @click="mostrarFormulario"
   style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
 />
-
+<hr />
 
     <AddAutos
       ref="AddAutosRef"
@@ -170,6 +170,8 @@ const methodBuscar = () => {
       @cerrar-formulario="cerrarFormulario"
       @event-edit-auto="ListarAutos"
     />
+
+    <br>
 
     <div class="buscar-container">
       <input
