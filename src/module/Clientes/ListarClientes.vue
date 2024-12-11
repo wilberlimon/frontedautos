@@ -203,8 +203,8 @@ const methodBuscar = () => {
           :value="listaClientes"
           showGridlines
           paginator
-          :rows="5"
-          :rowsPerPageOptions="[2, 3]"
+          :rows="2"
+          :rowsPerPageOptions="[2, 4, 6]"
           tableStyle="min-width: 50rem"
         >
           <Column field="nombre1" header="Primer Nombre" sortable></Column>

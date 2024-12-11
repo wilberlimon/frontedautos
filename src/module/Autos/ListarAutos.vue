@@ -194,8 +194,8 @@ const methodBuscar = () => {
           :value="listaAutos"
           showGridlines
           paginator
-          :rows="5"
-          :rowsPerPageOptions="[2, 3]"
+          :rows="2"
+          :rowsPerPageOptions="[2, 4, 6]"
           tableStyle="min-width: 50rem"
         >
           <Column field="Marca" header="Marca" sortable></Column>
