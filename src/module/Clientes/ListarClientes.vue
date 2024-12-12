@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { ref, nextTick} from 'vue'
+import { ref } from 'vue'
 import 'primeicons/primeicons.css'
 import AddClientes from './components/AddClientes.vue'
 import EditClientes from './components/EditClientes.vue'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import 'primeicons/primeicons.css'
 import Dialog from 'primevue/dialog'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 
-
-interface Cliente {
+export interface Cliente {
   _id: string
   nombre1: string
   nombre2: string
@@ -29,116 +27,105 @@ interface Cliente {
 
 const listaClientes = ref<Cliente[]>([])
 const verFormulario = ref(false)
-const verFormularioEditar = ref(false)
 const busquedacedulaIdentidad = ref('') // Campo de búsqueda por cédula
-const clienteSeleccionado = ref<Cliente | null>(null)
-  const dialogEliminar = ref(false)
+const dialogEliminar = ref(false)
 const clienteAEliminar = ref<string | null>(null)
 const toast = useToast()
 
-// desdeaqui
+// Referencias a componentes
 const AddClientesRef = ref<InstanceType<typeof AddClientes> | null>(null)
 const EditClientesRef = ref<InstanceType<typeof EditClientes> | null>(null)
-// hastaaqui
 
-const ListarClientes = () => {
-  axios
-    .get('http://localhost:3005/clientes/Listar')
-    .then((response) => {
-      listaClientes.value = response.data
-    })
-    .catch((error) => {
-      console.error('Error al obtener la lista de clientes:', error)
-    })
+// Listar clientes desde la API
+const ListarClientes = async () => {
+  try {
+    const response = await axios.get('http://localhost:3005/clientes/Listar')
+    listaClientes.value = response.data
+  } catch (error) {
+    console.error('Error al obtener la lista de clientes:', error)
+  }
 }
 ListarClientes()
 
-// desdeaqui
+// Mostrar formulario para añadir cliente
 const mostrarFormulario = () => {
   if (AddClientesRef.value) {
     AddClientesRef.value.abrirDialog()
+    // Después de abrir el formulario, actualizamos la lista de clientes
+    ListarClientes()
   } else {
-    console.error('Referencia AddAutosRef no está definida')
+    console.error('Referencia AddClientesRef no está definida')
   }
 }
-// hastaaqui
+
+// Cerrar formulario
 const cerrarFormulario = () => {
   verFormulario.value = false
 }
 
+// Confirmar eliminación
 const confirmarEliminar = (id: string) => {
   clienteAEliminar.value = id
   dialogEliminar.value = true
 }
 
-
-// desdeaqui
-const eliminarCliente = () => {
+// Eliminar cliente
+const eliminarCliente = async () => {
   if (clienteAEliminar.value) {
-    axios
-    .delete(`http://localhost:3005/clientes/${clienteAEliminar.value}`)
-    .then(() => {
+    try {
+      await axios.delete(`http://localhost:3005/clientes/${clienteAEliminar.value}`)
+      toast.add({
+        severity: 'error',
+        summary: 'Eliminado',
+        detail: 'Registro eliminado exitosamente',
+        life: 3000,
+      })
+      // Actualizamos la lista de clientes después de la eliminación
       ListarClientes()
-        toast.add({
-          severity: 'error',
-          summary: 'Eliminado',
-          detail: 'Registro eliminado exitosamente',
-          life: 3000,
-        })
-        dialogEliminar.value = false
-        clienteAEliminar.value = null
-      })
-      .catch((error) => {
-        console.error('Error al eliminar cliente:', error)
-      })
+      dialogEliminar.value = false
+      clienteAEliminar.value = null
+    } catch (error) {
+      console.error('Error al eliminar cliente:', error)
+    }
   }
 }
-// hastaaqui
 
-// desde aqui
+// Actualizar cliente
 const actualizarCliente = (itemcliente: Cliente) => {
-  clienteSeleccionado.value = itemcliente
-  verFormularioEditar.value = true
-  nextTick(() => {
-    // Asegura que Vue actualice la vista
-  })
+  EditClientesRef.value?.abrirDialog(itemcliente)
+  // Después de que se actualice, volvemos a listar los clientes
+  ListarClientes()
 }
-// hasta aqui
 
-
-const methodBuscar = () => {
-  // Validar si el campo está vacío
+// Buscar cliente por cédula
+const methodBuscar = async () => {
   if (!busquedacedulaIdentidad.value.trim()) {
-    ListarClientes() // Llama a la función para listar todos los clientes
+    ListarClientes()
     return
   }
 
-  // Construir la consulta para buscar por cédula
   const query = `?cedulaIdentidad=${encodeURIComponent(busquedacedulaIdentidad.value.trim())}`
 
-  axios
-    .get(`http://127.0.0.1:3005/clientes/buscar${query}`)
-    .then((response) => {
-      const cliente = response.data
-
-      // Validar si la respuesta contiene datos
-      if (cliente && Object.keys(cliente).length > 0) {
-        listaClientes.value = [cliente] // Convertir el objeto en un arreglo para mostrarlo
-      } else {
-        alert('No se encontraron resultados para esta cédula.')
-        listaClientes.value = [] // Limpiar la tabla
-      }
-    })
-    .catch((err) => {
-      console.error('Error al buscar cliente:', err)
-      alert('Ocurrió un error al realizar la búsqueda.')
-    })
+  try {
+    const response = await axios.get(`http://127.0.0.1:3005/clientes/buscar${query}`)
+    const cliente = response.data
+    if (cliente && Object.keys(cliente).length > 0) {
+      listaClientes.value = [cliente]
+    } else {
+      alert('No se encontraron resultados para esta cédula.')
+      listaClientes.value = []
+    }
+  } catch (err) {
+    console.error('Error al buscar cliente:', err)
+    alert('Ocurrió un error al realizar la búsqueda.')
+  }
 }
 </script>
 
 <template>
- <div>
+  <div>
     <Toast />
+    <!-- Diálogo de confirmación de eliminación -->
     <Dialog
       v-model:visible="dialogEliminar"
       header="Confirmar eliminación"
@@ -158,6 +145,7 @@ const methodBuscar = () => {
       </div>
     </Dialog>
 
+    <!-- Botón para añadir cliente -->
     <Button
       icon="pi pi-plus"
       aria-label="Añadir"
@@ -165,23 +153,21 @@ const methodBuscar = () => {
       style="background-color: #2271B3; color: white; border-color: #2271B3; margin-bottom: 15px;"
     />
     <hr />
-    <br>
+    <br />
+
+    <!-- Componentes AddClientes y EditClientes -->
     <AddClientes
       ref="AddClientesRef"
       @cerrar-formulario="cerrarFormulario"
       @event-nuevo-auto="ListarClientes"
     />
-
-    <EditAutos
+    <EditClientes
       ref="EditClientesRef"
-      v-if="verFormularioEditar && clienteSeleccionado"
-      :seleccionado="clienteSeleccionado"
       @cerrar-formulario="cerrarFormulario"
       @event-edit-auto="ListarClientes"
     />
 
-    <!-- Caja de búsqueda encima de la tabla -->
-     <br>
+    <!-- Búsqueda por cédula -->
     <div class="buscar-container">
       <input
         type="text"
@@ -209,38 +195,27 @@ const methodBuscar = () => {
           tableStyle="min-width: 50rem"
         >
           <Column field="nombre1" header="Primer Nombre" sortable></Column>
-          <Column field="apellidoPaterno" header="Apellido Paterno" ></Column>
-          <Column field="apellidoMaterno" header="Apellido Materno " ></Column>
-          <Column field="cedulaIdentidad" header="Cedula de Identidad" ></Column>
-          <Column field="telefono" header="Telefono" ></Column>
-          <!-- DESDEAQUI -->
-          <Column
-  header="Acciones"
-  style="width: 150px;"
->
-  <template #body="slotProps">
-    <Button
-      icon="pi pi-pencil"
-      @click="actualizarCliente(slotProps.data)"
-      style="
-        background-color: #F7BB07;
-        color: white;
-        border-color: #F7BB07;
-        margin-right: 15px;
-      "
-    />
-    <Button
-      icon="pi pi-times"
-      @click="confirmarEliminar(slotProps.data._id)"
-      style="background-color: #e00000; color: white; border-color: #e00000"
-    />
-  </template>
-</Column>
-           <!-- HASTAAQUI -->
+          <Column field="apellidoPaterno" header="Apellido Paterno"></Column>
+          <Column field="apellidoMaterno" header="Apellido Materno"></Column>
+          <Column field="cedulaIdentidad" header="Cedula de Identidad"></Column>
+          <Column field="telefono" header="Telefono"></Column>
+          <Column header="Acciones" style="width: 150px;">
+            <template #body="slotProps">
+              <Button
+                icon="pi pi-pencil"
+                @click="actualizarCliente(slotProps.data)"
+                style="background-color: #F7BB07; color: white; border-color: #F7BB07; margin-right: 15px;"
+              />
+              <Button
+                icon="pi pi-times"
+                @click="confirmarEliminar(slotProps.data._id)"
+                style="background-color: #e00000; color: white; border-color: #e00000"
+              />
+            </template>
+          </Column>
         </DataTable>
       </div>
     </div>
-
     <div v-else>cargando datos...</div>
   </div>
 </template>
@@ -255,7 +230,7 @@ const methodBuscar = () => {
 .buscar-container {
   display: flex;
   align-items: center;
-  margin-bottom: 15px; /* Espacio debajo de la caja de búsqueda */
+  margin-bottom: 15px;
 }
 
 .input-busqueda {
@@ -265,6 +240,6 @@ const methodBuscar = () => {
 }
 
 .card {
-  margin-top: 20px; /* Espacio entre la caja de búsqueda y la tabla */
+  margin-top: 20px;
 }
 </style>

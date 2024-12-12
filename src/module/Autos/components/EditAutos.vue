@@ -162,6 +162,7 @@ defineExpose({ abrirDialog })
     </div>
 
     <div>
+
       <label for="fechaingreso">Fecha de Ingreso: </label>
       <input id="fechaingreso" type="date" v-model="datosAEditar.FechaIngreso" />
     </div>
