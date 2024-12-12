@@ -162,7 +162,7 @@ const methodBuscar = () => {
       icon="pi pi-plus"
       aria-label="Añadir"
       @click="mostrarFormulario"
-      style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+      style="background-color: #2271B3; color: white; border-color: #2271B3; margin-bottom: 15px;"
     />
     <hr />
     <br>
@@ -213,20 +213,30 @@ const methodBuscar = () => {
           <Column field="apellidoMaterno" header="Apellido Materno " ></Column>
           <Column field="cedulaIdentidad" header="Cedula de Identidad" ></Column>
           <Column field="telefono" header="Telefono" ></Column>
-          <Column header="Acciones">
-            <template #body="slotProps">
-              <Button
-                icon="pi pi-pencil"
-                @click="actualizarCliente(slotProps.data)"
-                style="background-color: #065813; color: white; border-color: #065813; margin-right: 15px;"
-              />
-              <Button
-                icon="pi pi-times"
-                @click="confirmarEliminar(slotProps.data._id)"
-                style="background-color: #E00000; color: white; border-color: #E00000;"
-              />
-            </template>
-          </Column>
+          <!-- DESDEAQUI -->
+          <Column
+  header="Acciones"
+  style="width: 150px;"
+>
+  <template #body="slotProps">
+    <Button
+      icon="pi pi-pencil"
+      @click="actualizarCliente(slotProps.data)"
+      style="
+        background-color: #F7BB07;
+        color: white;
+        border-color: #F7BB07;
+        margin-right: 15px;
+      "
+    />
+    <Button
+      icon="pi pi-times"
+      @click="confirmarEliminar(slotProps.data._id)"
+      style="background-color: #e00000; color: white; border-color: #e00000"
+    />
+  </template>
+</Column>
+           <!-- HASTAAQUI -->
         </DataTable>
       </div>
     </div>

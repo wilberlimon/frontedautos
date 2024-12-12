@@ -166,10 +166,9 @@ defineExpose({ abrirDialog })
       <input id="fechaingreso" type="date" v-model="datosAEditar.FechaIngreso" />
     </div>
 
-    <div class="flex justify-end gap-2">
-      <button @click="visible = false">Cancelar</button>
-      <button :disabled="loading" @click="enviarDatos">Actualizar</button>
-    </div>
+    <div class="boton-edicion">
+        <button icon="pi pi-check" @click.prevent="enviarDatos">Actualizar</button>
+      </div>
   </Dialog>
 </template>
 
@@ -196,15 +195,20 @@ select {
   box-sizing: border-box;
 }
 
-button {
-  padding: 10px;
-  background-color: #065813;
+
+.boton-edicion {
+  margin-top: 1rem;
+}
+
+.boton-edicion button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background-color: #044c0d;
   color: white;
-  font-weight: bold;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
 }
 
 button:hover {

@@ -69,7 +69,7 @@ defineExpose({ abrirDialog })
     icon="pi pi-plus"
     aria-label="Añadir"
     @click="abrirDialog"
-    style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
+    style="background-color: #2271B3; color: white; border-color: #2271B3; margin-bottom: 15px;"
   />
 
   <!-- Diálogo para el formulario -->

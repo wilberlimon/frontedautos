@@ -4,6 +4,7 @@ import Column from 'primevue/column'
 import RegistrarVentaForm from './components/RegistrarVentaForm.vue'
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
+import { Button } from 'primevue'
 
 const ventasData = ref([]) // Datos de ventas
 
@@ -75,16 +76,28 @@ onMounted(() => {
     <Column field="TiempoDeEntrega" header="Tiempo Entrega"></Column>
     <Column field="Garantia" header="Garantía"></Column>
     <!-- Columna de Acciones -->
-    <Column header="Acciones">
-      <template #body="slotProps">
-        <!-- Botón de Editar -->
-        <!-- <button class="btn btn-warning" @click="EditarVenta(slotProps.data)">Editar</button> -->
-        <!-- Botón de Eliminar -->
-        <button class="btn btn-danger ml-2" @click="EliminarVenta(slotProps.data._id)">
-          Eliminar
-        </button>
-      </template>
-    </Column>
+    <Column
+  header="Acciones"
+  style="width: 150px;"
+>
+  <template #body="slotProps">
+    <!-- <Button
+      icon="pi pi-pencil"
+      @click="actualizarAutos(slotProps.data)"
+      style="
+        background-color: #F7BB07;
+        color: white;
+        border-color: #F7BB07;
+        margin-right: 15px;
+      "
+    /> -->
+    <Button
+      icon="pi pi-times"
+      @click="EliminarVenta(slotProps.data._id)"
+      style="background-color: #e00000; color: white; border-color: #e00000"
+    />
+  </template>
+</Column>
   </DataTable>
 </template>
 
