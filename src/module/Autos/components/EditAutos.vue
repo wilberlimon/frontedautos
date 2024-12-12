@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, defineEmits, defineProps, ref, watch } from 'vue'
+import { reactive, defineEmits, ref } from 'vue'
 import axios from 'axios'
 import { useToast } from 'primevue/usetoast'
 import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
 import Dialog from 'primevue/dialog'
+import type { Autos } from '../ListarAutos.vue'
 
 // Toast para mostrar mensajes de éxito o error
 const toast = useToast()
@@ -13,25 +14,20 @@ const toast = useToast()
 const emit = defineEmits(['event-edit-auto', 'cerrar-formulario'])
 
 // Definir las propiedades que el componente recibe
-const prop = defineProps({
-  seleccionado: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-})
+const seleccionado = ref<Autos | null>(null)
 
 // Inicializar datos reactivos para la edición
 const datosAEditar = reactive({
-  Marca: prop.seleccionado?.Marca || '',
-  Modelo: prop.seleccionado?.Modelo || '',
-  Anio: prop.seleccionado?.Anio || '',
-  Color: prop.seleccionado?.Color || '',
-  Tipo: prop.seleccionado?.Tipo || '',
-  Chasis: prop.seleccionado?.Chasis || '',
-  Vin: prop.seleccionado?.Vin || '',
-  OtrasCaracteristicas: prop.seleccionado?.OtrasCaracteristicas || '',
-  FechaIngreso: prop.seleccionado?.FechaIngreso || '',
+  _id: '',
+  Marca: seleccionado.value?.Marca || '',
+  Modelo: seleccionado.value?.Modelo || '',
+  Anio: seleccionado.value?.Anio || '',
+  Color: seleccionado.value?.Color || '',
+  Tipo: seleccionado.value?.Tipo || '',
+  Chasis: seleccionado.value?.Chasis || '',
+  Vin: seleccionado.value?.Vin || '',
+  OtrasCaracteristicas: seleccionado.value?.OtrasCaracteristicas || '',
+  FechaIngreso: seleccionado.value?.FechaIngreso || new Date(),
 })
 
 // Control del diálogo de confirmación
@@ -40,13 +36,26 @@ const visible = ref(false)
 const loading = ref(false) // Controla el estado de carga
 
 // Función para abrir el dialogo de edición
-const abrirDialog = () => {
+const abrirDialog = (auto: Autos) => {
+  seleccionado.value = auto
+
+  datosAEditar._id = auto._id
+  datosAEditar.Marca = auto.Marca
+  datosAEditar.Modelo = auto.Modelo
+  datosAEditar.Anio = auto.Anio
+  datosAEditar.Color = auto.Color
+  datosAEditar.Tipo = auto.Tipo
+  datosAEditar.Chasis = auto.Chasis
+  datosAEditar.Vin = auto.Vin
+  datosAEditar.OtrasCaracteristicas = auto.OtrasCaracteristicas
+  datosAEditar.FechaIngreso = auto.FechaIngreso.slice(0, 10)
+
   visible.value = true
 }
 
 // Función para enviar datos editados al servidor
 const enviarDatos = () => {
-  if (!prop.seleccionado?._id) {
+  if (!seleccionado.value?._id) {
     console.error('No se ha seleccionado un Auto para editar.')
     return
   }
@@ -60,7 +69,7 @@ const enviarDatos = () => {
     accept: () => {
       setTimeout(() => {
         axios
-          .patch(`http://127.0.0.1:3005/autos/${prop.seleccionado._id}`, datosAEditar)
+          .patch(`http://127.0.0.1:3005/autos/${seleccionado.value?._id}`, datosAEditar)
           .then(() => {
             toast.add({
               severity: 'success',
@@ -93,25 +102,6 @@ const enviarDatos = () => {
     },
   })
 }
-
-// Monitorear cambios en prop.seleccionado para actualizar los datos reactivos
-watch(
-  () => prop.seleccionado,
-  (newVal) => {
-    if (newVal) {
-      // Si se selecciona un nuevo auto, actualizar los datos
-      datosAEditar.Marca = newVal.Marca
-      datosAEditar.Modelo = newVal.Modelo
-      datosAEditar.Anio = newVal.Anio
-      datosAEditar.Color = newVal.Color
-      datosAEditar.Tipo = newVal.Tipo
-      datosAEditar.Chasis = newVal.Chasis
-      datosAEditar.Vin = newVal.Vin
-      datosAEditar.OtrasCaracteristicas = newVal.OtrasCaracteristicas
-      datosAEditar.FechaIngreso = newVal.FechaIngreso
-    }
-  },
-)
 
 defineExpose({ abrirDialog })
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import 'primeicons/primeicons.css'
 import Button from 'primevue/button'
 import AddAutos from './components/AddAutos.vue'
@@ -11,7 +11,7 @@ import Dialog from 'primevue/dialog'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 
-interface Autos {
+export interface Autos {
   _id: string
   Marca: string
   Modelo: string
@@ -26,15 +26,12 @@ interface Autos {
 
 const listaAutos = ref<Autos[]>([])
 const verFormulario = ref(false)
-const verFormularioEditar = ref(false)
 const busquedamarca = ref('')
-const AutoSeleccionado = ref<Autos | null>(null)
 const dialogEliminar = ref(false)
 const autoAEliminar = ref<string | null>(null)
 const toast = useToast()
 
 const AddAutosRef = ref<InstanceType<typeof AddAutos> | null>(null)
-const EditAutosRef = ref<InstanceType<typeof EditAutos> | null>(null)
 
 // Listar todos los autos
 const ListarAutos = () => {
@@ -92,12 +89,9 @@ const eliminarAutos = () => {
 }
 
 // Editar autos
+const EditAutosRef = ref<InstanceType<typeof EditAutos> | null>(null)
 const actualizarAutos = (itemAutos: Autos) => {
-  AutoSeleccionado.value = itemAutos
-  verFormularioEditar.value = true
-  nextTick(() => {
-    // Asegura que Vue actualice la vista
-  })
+  EditAutosRef.value?.abrirDialog(itemAutos)
 }
 
 // Buscar autos por marca
@@ -150,13 +144,13 @@ const methodBuscar = () => {
     </Dialog>
 
     <Button
-  icon="pi pi-plus"
-  aria-label="Añadir"
-  @click="mostrarFormulario"
-  style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px;"
-/>
-<hr />
-<br>
+      icon="pi pi-plus"
+      aria-label="Añadir"
+      @click="mostrarFormulario"
+      style="background-color: #065813; color: white; border-color: #065813; margin-bottom: 15px"
+    />
+    <hr />
+    <br />
 
     <AddAutos
       ref="AddAutosRef"
@@ -166,13 +160,11 @@ const methodBuscar = () => {
 
     <EditAutos
       ref="EditAutosRef"
-      v-if="verFormularioEditar && AutoSeleccionado"
-      :seleccionado="AutoSeleccionado"
       @cerrar-formulario="cerrarFormulario"
       @event-edit-auto="ListarAutos"
     />
 
-    <br>
+    <br />
 
     <div class="buscar-container">
       <input
@@ -182,13 +174,13 @@ const methodBuscar = () => {
         placeholder="Buscar por marca..."
       />
       <Button
-    icon="pi pi-search"
-    aria-label="Search"
-    @click="methodBuscar"
-    style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px;"
-  />
+        icon="pi pi-search"
+        aria-label="Search"
+        @click="methodBuscar"
+        style="background-color: #065813; color: white; border-color: #065813; margin-left: 10px"
+      />
     </div>
-<br>
+    <br />
     <div v-if="listaAutos.length > 0" class="block">
       <div class="card">
         <DataTable
@@ -200,24 +192,28 @@ const methodBuscar = () => {
           tableStyle="min-width: 50rem"
         >
           <Column field="Marca" header="Marca" sortable></Column>
-          <Column field="Modelo" header="Modelo" ></Column>
+          <Column field="Modelo" header="Modelo"></Column>
           <Column field="Anio" header="Año" sortable></Column>
-          <Column field="Color" header="Color" ></Column>
-          <Column field="Tipo" header="Tipo" ></Column>
+          <Column field="Color" header="Color"></Column>
+          <Column field="Tipo" header="Tipo"></Column>
           <Column header="Acciones">
             <template #body="slotProps">
               <Button
-              icon="pi pi-pencil"
-              @click="actualizarAutos(slotProps.data)"
-              style="background-color: #065813; color: white; border-color: #065813; margin-right: 15px;"
+                icon="pi pi-pencil"
+                @click="actualizarAutos(slotProps.data)"
+                style="
+                  background-color: #065813;
+                  color: white;
+                  border-color: #065813;
+                  margin-right: 15px;
+                "
               />
 
               <Button
-              icon="pi pi-times"
-              @click="confirmarEliminar(slotProps.data._id)"
-              style="background-color: #E00000; color: white; border-color: #E00000;"
+                icon="pi pi-times"
+                @click="confirmarEliminar(slotProps.data._id)"
+                style="background-color: #e00000; color: white; border-color: #e00000"
               />
-
             </template>
           </Column>
         </DataTable>
